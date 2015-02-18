@@ -3,17 +3,28 @@ billiardTable = Core.class(Sprite)
 --[[ Using this class one will be able to add the objects to the game(no functions and events are yet attached to the objects )
 ]]--
 
-local world = b2.World.new(0, 0, true)
+--local world = b2.World.new(0, 10, true)
 function billiardTable:init()
-self:boundary()
---wall(x,y,width,height)
-self:wall(0,686/2,150,686)
-self:wall(1200/2 , 0 , 1200 , 130)
-self:wall(1200/2, 686 , 1200, 130 )
-self:wall(1200, 686/2 , 130,686)
-self:loophole()
+	self.world = b2.World.new(0, 10, true)
+	self:boundary()
+	--wall(x,y,width,height)
+	local height, width
+	width = 50 -- depending on horizontal rectangle or vertical rectangle thickness will be same o.e 50
+	height = width
+	print("height and width " , height , width)
+	self:wall(50,686/2,50,686)-- left vertical side
+	self:wall(1200/2 , 50 , 1200 , height) -- top horizontal side
+	self:wall(1200/2, 636 , 1200, height ) -- bottom horizontal side
+	self:wall(1150, 686/2 , width,686)  -- right vertical side
+	self:loophole(60,55)
+	self:loophole(590,55)
+	self:loophole(1145,55)
+	self:balls()
+	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame)
+	self:addChild(cueBallProjection.new())
+	--just for reference, debug draw is very useful, to see the things happening in physics world
 	local debugDraw = b2.DebugDraw.new()
-	world:setDebugDraw(debugDraw)
+	self.world:setDebugDraw(debugDraw)
 	self:addChild(debugDraw)
 
 end
@@ -46,15 +57,49 @@ function billiardTable:wall(x,y,width, height )
 	shape:endPath()
 	shape:setPosition(x,y)
 	print("X and Y position of shape " , shape:getPosition())
+	-- add physics properties to the wall
+	local body = self.world:createBody{type = b2.STATIC_BODY}
+	body:setPosition(shape:getX(),shape:getY())
+	local poly = b2.PolygonShape.new()
+	poly:setAsBox(shape:getWidth()/2 , shape:getHeight()/2)
+	local fixture = body:createFixture{shape = poly, density = 500.0, 
+	friction = 1, restitution = 0.8}
+	shape.body = body
 	self:addChild(shape)
 end
 
 
-function billiardTable:loophole()
-	local body = world:createBody{type = b2.STATIC_BODY }
-	--body:setAnchorPoint(1,1)
-	local circle = b2.CircleShape.new(50, 50, 50)
+function billiardTable:loophole(x,y)
+	local body = self.world:createBody{type = b2.STATIC_BODY }
+	local circle = b2.CircleShape.new(x, y, 38)
 	local fixture = body:createFixture{shape = circle, density = 500.0, 
 	friction = 1, restitution = 0.8}
 
 end
+function billiardTable:balls()
+	local cueBall = Bitmap.new(Texture.new("img/cueball.png"))
+	cueBall:setAnchorPoint(0.5,0.5)
+	local projectBall = Bitmap.new(Texture.new("img/projectedCueBall.png"))
+	projectBall:setAnchorPoint(0.5,0.5)
+	cueBall:setPosition(100,100)
+	projectBall:setPosition(300, 300)
+	
+	--let create physics property of this ball
+	local function ballPhysics(ball)
+	local body = self.world:createBody{type = b2.DYNAMIC_BODY}
+	body:setPosition(ball:getX(),ball:getY())
+	local circle = b2.CircleShape.new(0,0,25)
+	local fixture = body:createFixture{shape = circle, density = 500.0, 
+	friction = 1, restitution = 0.8}
+	ball.body = body
+	end
+	ballPhysics(cueBall)
+	ballPhysics(projectBall)
+	self:addChild(cueBall)
+	self:addChild(projectBall)
+	--return cueball , projectBall
+	
+ end
+ function billiardTable:onEnterFrame()
+ self.world:step(1/60, 1,3)
+ end
