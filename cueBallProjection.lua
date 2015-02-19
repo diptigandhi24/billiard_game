@@ -5,31 +5,34 @@ require"box2d"
 
  cueBallProjection = Core.class(Sprite)
  
- --local world = b2.World.new(0,10,true)
  
- function cueBallProjection:init(world)
-	self.cueball , self.projectball = self:balls()
-	self.world =b2.World.new(0,10,true)
-	local debugDraw = b2.DebugDraw.new()
-	self.world:setDebugDraw(debugDraw)
-	self:addChild(debugDraw)
+ function cueBallProjection:init(billiardworldobj)
+	self.world = billiardworldobj
+	self:balls()
+	print("world object in cueBallProjection" , self.world)
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
+	self:addEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
+	
  end
  
  function cueBallProjection:balls()
-	local cueBall = Bitmap.new(Texture.new("img/cueball.png"))
-	cueBall:setAnchorPoint(0.5,0.5)
-	local projectBall = Bitmap.new(Texture.new("img/projectedCueBall.png"))
-	projectBall:setAnchorPoint(0.5,0.5)
-	cueBall:setPosition(100,100)
-	projectBall:setPosition(300, 300)
+	--create a cueball object
+	self.cueBall = Bitmap.new(Texture.new("img/cueball.png"))
+	self.cueBall:setAnchorPoint(0.5,0.5)
+	self.cueBall:setPosition(100,100)
+	
+	--create a projectball object
+	self.projectBall = Bitmap.new(Texture.new("img/projectedCueBall.png"))
+	self.projectBall:setAnchorPoint(0.5,0.5)
+	self.projectBall:setPosition(300, 300)
 	
 	--let create physics property of this ball
-	self:ballPhysics(cueBall)
+	self:ballPhysics(self.cueBall)
+	self:ballPhysics(self.projectBall)
 	
-	self:addChild(cueBall)
-	self:addChild(projectBall)
-	return cueball , projectBall
+	self:addChild(self.cueBall)
+	self:addChild(self.projectBall)
+
  end
  
  function cueBallProjection:ballPhysics(ball)
@@ -41,6 +44,20 @@ require"box2d"
 	ball.body = body
 
 end
+
+function cueBallProjection : onMouseDown(event)
+	if(self.projectBall:hitTestPoint(event.x , event.y)) then
+		self.startpoint.X = event.x
+		self.startpoint.Y = event.y
+		
+	end
+end
+
+function cueBallProjection : onMouseMove(event)
+	
+
+end
+
  
  function cueBallProjection:onEnterFrame()
  self.world:step(1/60, 1,3)
