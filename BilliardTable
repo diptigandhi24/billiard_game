@@ -1,0 +1,8 @@
+ why the world object is local and not self?
+ 	Because in my game i need only one world object . I didnt made it self because  i will need only one instance of BilliardTable class for the entire game and one physics world
+
+
+ If you print something inthe class and in the main class, then the printing order will start from class and then the main class, 
+ this shows the execution order of the programm also. i.e main is always executed inthe end
+
+ 
