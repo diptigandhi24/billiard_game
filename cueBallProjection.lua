@@ -8,98 +8,116 @@
  
  function cueBallProjection:init(billiardworldobj)
 	self.world = billiardworldobj
-	self:balls()
-	print("world object in cueBallProjection" , self.world)
-	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
-	self:addEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
-	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
-
- end
- 
- function cueBallProjection:balls()
-	--create a cueball object
-	self.cueBall = Bitmap.new(Texture.new("img/cueball.png"))
-	self.cueBall:setAnchorPoint(0.5,0.5)
-	self.cueBall:setPosition(200,300)
 	
-	--create a projectball object
-	self.projectBall = Bitmap.new(Texture.new("img/projectedCueBall.png"))
-	self.projectBall:setAnchorPoint(0.5,0.5)
-	self.projectBall:setPosition(400, 300)
+	--create ball object
+	self.cueBall = self:createballs("img/cueball.png",400 , 400 )
+	self.projectBall = self:createballs("img/projectedCueBall.png", 600,400)  
+	self.coloredBall = self:createballs("img/colouredBall.png" ,  800,500)
 	
-	--let create physics property of this ball
-	self:ballPhysics(self.cueBall)
-	self:ballPhysics(self.projectBall)
-	--self.projectBall.body:setLinearDamping(1)
-	self.projectBall.body:setAngularDamping(1)
-	--lets create projected path between the cueball and the projected ball
+	--lets create identity of balls in box2d world
+	
+	self:physicsPropertyOfBall(self.cueBall , b2.DYNAMIC_BODY)
+	--self:physicsPropertyOfBall(self.projectBall , b2.DYNAMIC_BODY)
+	self:physicsPropertyOfBall(self.coloredBall , b2.DYNAMIC_BODY)
+	self.coloredBall.fixture:isSensor(true)
+	
+	--when the screen is loaded ,lets show the default projected path of the cueBall
 	self.slingshot = Shape.new()
-	
-	--default and intial  value of mousejoint
-	self.mouseJoint = nil
-	--creating dummy body
-	self.ground = self.world:createBody({})
-	
-	--lets add the balls with there physics properties to the sprite objeect
-	self:addChild(self.slingshot)
-	self:addChild(self.cueBall)
-	self:addChild(self.projectBall)
-	
-	self:defaultjoint()
-
- end
- 
- function cueBallProjection:ballPhysics(ball)
-	local body = self.world:createBody{type = b2.DYNAMIC_BODY}
-	body:setPosition(ball:getX(),ball:getY())
-	local circle = b2.CircleShape.new(0,0,25)
-	local fixture = body:createFixture{shape = circle, density = 500.0, 
-	friction = 1, restitution = 0.8}
-	ball.body = body
-
-end
-
--- lets create the default mouse joint between the cueball and projectball
-
-function cueBallProjection :defaultjoint()
-	--[[local jointDef = b2.createMouseJointDef(self.cueBall.body , self.projectBall.body ,self.cueBall:getX() , self.cueBall:getY() , 10000)
-	self.mouseJoint = self.world:createJoint(jointDef)
-	self.mouseJoint:setTarget(self.projectBall:getX(), self.projectBall:getY())]]--
-	self.slingshot:clear()
 	self.slingshot:setLineStyle(3, 0x0000FF,1)
 	self.slingshot:beginPath()
 	self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY())
 	self.slingshot:lineTo(self.projectBall:getX(), self.projectBall:getY())
 	self.slingshot:endPath()
+	
+	self:addChild(self.slingshot)
+	self:addChild(self.cueBall)
+	self:addChild(self.projectBall)
+	self:addChild(self.coloredBall)
+	
+	
+	
+	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
+	self:addEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
+	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
+	self:addEventListener(Event.MOUSE_UP, self.onMouseUp, self)
+	
+	--Velocity of CueBall will depend on how hard the ball is hit by stick
+	-- i.e how far you pull the stick back
+	
+	
+
+ end
+ 
+ function cueBallProjection:createballs( image_url,x , y )
+	
+	local ball = Bitmap.new(Texture.new(image_url))
+	ball:setAnchorPoint(0.5,0.5)
+	ball:setPosition(x , y)
+	return ball
 end
 
-function cueBallProjection : onMouseDown(event)
-	if(self.projectBall:hitTestPoint(event.x , event.y)) then
-		print("Mouse down X and Y points" ,event.x , event.y)
-		--self.startpoint.X = event.x
-		--self.startpoint.Y = event.y
-		local jointDef = b2.createMouseJointDef(self.ground , self.projectBall.body ,event.x , event.y,1000000)
-		self.mousejoint = self.world:createJoint(jointDef)
-	end
+ 
+ function cueBallProjection:physicsPropertyOfBall(ball, bodytype)
+ 
+	local body = self.world:createBody{type = bodytype}
+	body:setPosition(ball:getX(),ball:getY())
+	local circle = b2.CircleShape.new(0,0,25)
+	local fixture = body:createFixture{shape = circle, density = 0, 
+	friction = 1, restitution = 0.8}
+	ball.body = body
+	ball.fixture = fixture
+
 end
 
-function cueBallProjection : onMouseMove(event)
-	print("Mouse Move X and Y points" ,event.x , event.y)
-	if self.mousejoint ~= nil then
-		self.mousejoint:setTarget(event.x , event.y)
+ function cueBallProjection:raycastCallback (fixture ,hitx , hity , vecx ,vecty,event  )
+	print("hulalalahualallaalalla")
+	if(fixture ~= nil)then
 		self.slingshot:clear()
 		self.slingshot:setLineStyle(3, 0x0000FF,1)
 		self.slingshot:beginPath()
 		self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY())
-		self.slingshot:lineTo(event.x,event.y)
+		self.slingshot:lineTo(hitx , hity)
+		self.slingshot:endPath()
+	else
+		self.slingshot:clear()
+		self.slingshot:setLineStyle(3, 0x0000FF,1)
+		self.slingshot:beginPath()
+		self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY())
+		self.slingshot:lineTo(event.x ,event.y)
 		self.slingshot:endPath()
 	end
+	
+	return fraction
 
+	
+	
+end
+function cueBallProjection : onMouseDown(event)
+	print("Calling MouseDown")
+	self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(), event.x , event.y , self:raycastCallback (),self )
 end
 
- 
+function cueBallProjection : onMouseMove(event)
+	
+		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(), event.x , event.y , self.raycastCallback() ,self )
+	
+
+end
+function cueBallProjection : onMouseUp(event)
+	if self.mousejoint ~= nil then
+		self.projectBall:setPosition(event.x ,event.y)
+		self.projectBall.body:setLinearDamping(10)
+		self.world:destroyJoint(self.mousejoint)
+		self.mousejoint = nil
+	end
+	
+end
+
+function cueBallProjection:onContact()
+	self.coloredBall:setLinearVelocity(self.cueBall:getLinearDamping())
+end
  function cueBallProjection:onEnterFrame()
-	self.world:step(1/60, 1,3)
+	self.world:step(1/60, 8,3)
 	for i = 1, self:getNumChildren() do
 		--get specific sprite
 		local sprite = self:getChildAt(i)
