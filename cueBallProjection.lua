@@ -17,9 +17,7 @@
 	--lets create identity of balls in box2d world
 	
 	self:physicsPropertyOfBall(self.cueBall , b2.DYNAMIC_BODY)
-	--self:physicsPropertyOfBall(self.projectBall , b2.DYNAMIC_BODY)
 	self:physicsPropertyOfBall(self.coloredBall , b2.DYNAMIC_BODY)
-	self.coloredBall.fixture:isSensor(true)
 	
 	--when the screen is loaded ,lets show the default projected path of the cueBall
 	self.slingshot = Shape.new()
@@ -34,15 +32,15 @@
 	self:addChild(self.projectBall)
 	self:addChild(self.coloredBall)
 	
+	--Default projected path of the ball will be  in the direction of user touch and till the  start of the wall.
+	--To find that point on the wall 
+	self.pointobj = pointsOnAline.new()
 	
 	
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
 	self:addEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
 	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
-	self:addEventListener(Event.MOUSE_UP, self.onMouseUp, self)
-	
-	--Velocity of CueBall will depend on how hard the ball is hit by stick
-	-- i.e how far you pull the stick back
+	--self:addEventListener(Event.MOUSE_UP, self.onMouseUp, self)
 	
 	
 
@@ -69,41 +67,37 @@ end
 
 end
 
- function cueBallProjection:raycastCallback (fixture ,hitx , hity , vecx ,vecty,event  )
-	print("hulalalahualallaalalla")
-	if(fixture ~= nil)then
+ function cueBallProjection:raycastCallback (fixture ,hitx , hity , vecx ,vecty,fraction  )
+		print("hit the fixture yeahhhhhhhhh")
 		self.slingshot:clear()
 		self.slingshot:setLineStyle(3, 0x0000FF,1)
 		self.slingshot:beginPath()
 		self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY())
 		self.slingshot:lineTo(hitx , hity)
 		self.slingshot:endPath()
-	else
-		self.slingshot:clear()
-		self.slingshot:setLineStyle(3, 0x0000FF,1)
-		self.slingshot:beginPath()
-		self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY())
-		self.slingshot:lineTo(event.x ,event.y)
-		self.slingshot:endPath()
-	end
-	
+	print("fractionnnnnnnnn : " , fraction)
 	return fraction
+
 
 	
 	
 end
 function cueBallProjection : onMouseDown(event)
-	print("Calling MouseDown")
-	self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(), event.x , event.y , self:raycastCallback (),self )
+		self.pointobj: twopointSlope(self.cueBall:getX(),self.cueBall:getY(),event.x,event.y)
+		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(),self.pointobj.Xraycastpoint2 ,
+		self.pointobj.Yraycastpoint2, self.raycastCallback ,self )
+		
 end
 
 function cueBallProjection : onMouseMove(event)
-	
-		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(), event.x , event.y , self.raycastCallback() ,self )
-	
+		self.pointobj: twopointSlope(self.cueBall:getX(),self.cueBall:getY(),event.x,event.y)
+		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(),self.pointobj.Xraycastpoint2 ,
+		self.pointobj.Yraycastpoint2, self.raycastCallback ,self )
+		
 
 end
 function cueBallProjection : onMouseUp(event)
+
 	if self.mousejoint ~= nil then
 		self.projectBall:setPosition(event.x ,event.y)
 		self.projectBall.body:setLinearDamping(10)
