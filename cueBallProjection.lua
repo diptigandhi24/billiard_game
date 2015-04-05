@@ -1,7 +1,4 @@
---[[In this class we are just going to plot the projection path of the cue ball, which will show us how ball is
-	going to hit another ball or wall and at what angle ]]--
-	
- require"box2d"
+require"box2d"
 
  cueBallProjection = Core.class(Sprite)
  
@@ -11,7 +8,9 @@
 	
 	--create ball object
 	self.cueBall = self:createballs("img/cueball.png",400 , 400 )
-	self.projectBall = self:createballs("img/projectedCueBall.png", 600,400)  
+	self.projectBall = self:createballs("img/projectedCueBall.png", 600,400)
+		
+	self.projectBall:setAnchorPoint(0.5,0.5)
 	self.coloredBall = self:createballs("img/colouredBall.png" ,  800,500)
 	
 	--lets create identity of balls in box2d world
@@ -40,13 +39,13 @@
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
 	self:addEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
 	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
-	--self:addEventListener(Event.MOUSE_UP, self.onMouseUp, self)
+	self:addEventListener(Event.MOUSE_UP, self.onMouseUp, self)
 	
 	
 
  end
  
- function cueBallProjection:createballs( image_url,x , y )
+ function cueBallProjection:createballs( image_url , x , y )
 	
 	local ball = Bitmap.new(Texture.new(image_url))
 	ball:setAnchorPoint(0.5,0.5)
@@ -69,12 +68,30 @@ end
 
  function cueBallProjection:raycastCallback (fixture ,hitx , hity , vecx ,vecty,fraction  )
 		print("hit the fixture yeahhhhhhhhh")
+		local setx , sety
+		self.targetx = hitx
+		self.targety = hity
+		if(self.pointobj.XrefpointofWall ==0)then
+			
+			setx =hitx +25
+		else
+			setx =hitx -25
+		end
+		--print("Xposition of projectball" ,self.projectBall:getX())
+		if(self.pointobj.YrefpointofWall ==0)then
+			sety =hity +25
+		else
+			sety =hity -25
+		end
+		--print("Yposition of projectball" ,self.projectBall:getY())
+		self.projectBall:setPosition(setx ,sety)
 		self.slingshot:clear()
 		self.slingshot:setLineStyle(3, 0x0000FF,1)
 		self.slingshot:beginPath()
 		self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY())
-		self.slingshot:lineTo(hitx , hity)
+		self.slingshot:lineTo(self.projectBall:getX() ,self.projectBall:getY())
 		self.slingshot:endPath()
+		
 	print("fractionnnnnnnnn : " , fraction)
 	return fraction
 
@@ -87,6 +104,7 @@ function cueBallProjection : onMouseDown(event)
 		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(),self.pointobj.Xraycastpoint2 ,
 		self.pointobj.Yraycastpoint2, self.raycastCallback ,self )
 		
+		
 end
 
 function cueBallProjection : onMouseMove(event)
@@ -97,13 +115,10 @@ function cueBallProjection : onMouseMove(event)
 
 end
 function cueBallProjection : onMouseUp(event)
-
-	if self.mousejoint ~= nil then
-		self.projectBall:setPosition(event.x ,event.y)
-		self.projectBall.body:setLinearDamping(10)
-		self.world:destroyJoint(self.mousejoint)
-		self.mousejoint = nil
-	end
+	local tmpx = (self.projectBall:getX() - self.cueBall:getX()) *0.9
+	
+	local tmpy = (self.projectBall:getY() - self.cueBall:getY()) *0.9
+	self.cueBall.body:applyForce(tmpx,tmpy,self.projectBall:getX(),self.projectBall:getY())
 	
 end
 
