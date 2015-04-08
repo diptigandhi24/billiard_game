@@ -4,12 +4,12 @@ require "box2d"
 billiardTable = Core.class(Sprite)
 
 	
-function billiardTable:init()
+function billiardTable:init(physicsWorldOfbilliard)
 	self.table = Bitmap.new(Texture.new("img/billiard_table.png"))
 	self:addChild(self.table)            -- adds the table object to instance of billiardTable 
 	--[[Lets create the physics properties of table like cusion for rebounding and pockets to hold the ball ]]
 	--lets create a physics world of billiard game
-	self.physicsWorldOfbilliard = b2.World.new(0, 0, true)
+	self.physicsWorldOfbilliard = physicsWorldOfbilliard
 	
 	local tableWidth,tableHeight,railWidth,railHeight 
 	tableWidth =self.table:getWidth()
@@ -40,7 +40,7 @@ function billiardTable:init()
 	self.physicsWorldOfbilliard:setDebugDraw(debugDraw)
 	self:addChild(debugDraw)
 	
-
+	
 end
 
 
@@ -71,3 +71,4 @@ function billiardTable:createpockets(x,y)
 	fixture:setFilterData({categoryBits = 1 , maskbits = 1, groupIndex = -1})
 	return body
 end
+
