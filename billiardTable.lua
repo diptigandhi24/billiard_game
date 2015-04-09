@@ -45,18 +45,24 @@ end
 
 
 
-function billiardTable : interactiveRails(x,y,angle,maxi)
-	local minimum = maxi-15
+function billiardTable : interactiveRails(x,y,angle,longestSide)
+	local minimum = longestSide-15
 	local emptyRailbody = self.physicsWorldOfbilliard :createBody{type = b2.STATIC_BODY}
+--this is the first point of polygon refer as (0,0)
 	emptyRailbody:setPosition(x,y)
 	emptyRailbody:setAngle(angle)
-	
+--all the polygons are drawn in clockwise direction.
 	local railShape = b2.PolygonShape.new()
-	railShape:set(-15,-28, maxi,-28,minimum,0, 0,0)       --- -10,-20, 465,-20,455,0, 0,0
-
+	
+-- start drawing lines from  0,0
+--first pt 0,0	   second pt  ,third pt        ,fourth pt    ,bck to firstpoint
+	railShape:set( -15,-28,   longestSide,-28,  minimum,0,    0,0 ) 
+	
+	
 	-- let give shape to the rail body and define other properties of the rail
 	local railFixture = emptyRailbody:createFixture{shape = railShape ,density = 1, friction = 1, restitution = 0.1 }
-	--railFixture:setFilterData({categoryBits = 1 , maskbits = 3, groupIndex = -1})
+	railFixture:setFilterData{categoryBits = 1, maskBits = 1 , groupIndex = -3}
+	
 	--rail.body = body
 	local reactiveRail = emptyRailbody
 	return reactiveRail
@@ -65,10 +71,18 @@ end
 
 function billiardTable:createpockets(x,y)
 	self.body = self.physicsWorldOfbilliard:createBody{type = b2.STATIC_BODY }
-	local circle = b2.CircleShape.new(x, y, 38)
-	local fixture = self.body:createFixture{shape = circle, density = 500.0, 
+	
+	local innerCircle = b2.CircleShape.new(x, y, 38)
+	local outerFixture = self.body:createFixture{shape = innerCircle, density = 500.0, 
 	friction = 1, restitution = 0.8}
-	fixture:setFilterData({categoryBits = 1 , maskbits = 1, groupIndex = -1})
+	outerFixture:setFilterData{categoryBits = 2, maskBits = 1  }
+	outerFixture:setSensor(true)
+	
+	local outerCircle = b2.CircleShape.new(x, y, 55)
+	local outerFixture = self.body:createFixture{shape = outerCircle, density = 500.0, 
+	friction = 1, restitution = 0.8}
+	outerFixture:setFilterData{categoryBits = 2, maskBits = 1 , groupIndex = -3} 
+	
 	return body
 end
 
