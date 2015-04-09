@@ -45,20 +45,8 @@ cueBallProjection = Core.class(Sprite)
 		local setx , sety
 		self.targetx = hitx
 		self.targety = hity
-		if(self.pointobj.XrefpointofWall ==0)then
-			
-			setx =hitx +25
-		else
-			setx =hitx -25
-		end
-		--print("Xposition of projectball" ,self.projectBall:getX())
-		if(self.pointobj.YrefpointofWall ==0)then
-			sety =hity +25
-		else
-			sety =hity -25
-		end
 		--print("Yposition of projectball" ,self.projectBall:getY())
-		self.projectBall:setPosition(setx ,sety)
+		self.projectBall:setPosition(hitx ,hity)
 		self.slingshot:clear()
 		self.slingshot:setLineStyle(3, 0x0000FF,1)
 		self.slingshot:beginPath()
@@ -73,46 +61,11 @@ cueBallProjection = Core.class(Sprite)
 	
 	
 end
-function cueBallProjection:sideraycastCallback (fixture ,hitx , hity , vecx ,vecty,fraction  )
-		
-		print("hit the fixture yeahhhhhhhhh")
-		local setx , sety
-		self.targetx = hitx
-		self.targety = hity
-		if(self.pointobj.XrefpointofWall ==0)then
-			
-			setx =hitx +25
-		else
-			setx =hitx -25
-		end
-		--print("Xposition of projectball" ,self.projectBall:getX())
-		if(self.pointobj.YrefpointofWall ==0)then
-			sety =hity +25
-		else
-			sety =hity -25
-		end
-		--print("Yposition of projectball" ,self.projectBall:getY())
-		self.projectBall:setPosition(setx ,sety)
-		--self.slingshot:clear()
-		self.slingshot:setLineStyle(3, 0x0000FF,1)
-		self.slingshot:beginPath()
-		self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY()+20)
-		self.slingshot:lineTo(self.projectBall:getX() ,self.projectBall:getY()+20)
-		self.slingshot:endPath()
-		
-	print("fractionnnnnnnnn : " , fraction)
-	return fraction
-
-
-	
-	
-end
 function cueBallProjection : onMouseDown(event)
 		self.pointobj: twopointSlope(self.cueBall:getX(),self.cueBall:getY(),event.x,event.y)
 		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(),self.pointobj.Xraycastpoint2 ,
 		self.pointobj.Yraycastpoint2, self.raycastCallback ,self )
-		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY()+20,self.pointobj.Xraycastpoint2 ,
-		self.pointobj.Yraycastpoint2+20, self.sideraycastCallback ,self )
+		
 		
 		
 end
@@ -123,16 +76,14 @@ function cueBallProjection : onMouseMove(event)
 		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(),self.pointobj.Xraycastpoint2 ,
 		self.pointobj.Yraycastpoint2, self.raycastCallback ,self )
 		
-		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY()+20,self.pointobj.Xraycastpoint2 ,
-		self.pointobj.Yraycastpoint2+20, self.sideraycastCallback ,self )
 		
 		
 
 end
 function cueBallProjection : onMouseUp(event)
-	local tmpx = (self.projectBall:getX() - self.cueBall:getX()) *0.9
+	local tmpx = (self.projectBall:getX() - self.cueBall:getX()) *2
 	
-	local tmpy = (self.projectBall:getY() - self.cueBall:getY()) *0.9
+	local tmpy = (self.projectBall:getY() - self.cueBall:getY()) *2
 	self.cueBall.body:applyForce(tmpx,tmpy,self.projectBall:getX(),self.projectBall:getY())
 	
 end
