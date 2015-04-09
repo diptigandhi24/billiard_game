@@ -12,7 +12,7 @@ function billiardBalls : init(physicsWorldOfbilliard)
 --Arrangement of the coloredBalls
 	self.coloredBalls = Bitmap.new(Texture.new("img/colouredBall.png"))
 	self.coloredBalls:setAnchorPoint(0.5,0.5)
-	self.coloredBalls:setPosition(800,500)
+	self.coloredBalls:setPosition(1000,600)
 	self:physicsPropertyOfBall(self.coloredBalls)
 	self:addChild(self.coloredBalls)
 	
@@ -25,15 +25,26 @@ function billiardBalls : init(physicsWorldOfbilliard)
 	
 end
 
-function billiardBalls:physicsPropertyOfBall(ball , physicsPropertyOfBall )
+function billiardBalls:physicsPropertyOfBall(ball  )
  
 	local body = self.addsBallsToPhysicsWorld:createBody{type = b2.DYNAMIC_BODY}
 	body:setPosition(ball:getX(),ball:getY())
-	local circle = b2.CircleShape.new(0,0,25)
-	local fixture = body:createFixture{shape = circle, density = 0, 
+	
+	local innerCircle = b2.CircleShape.new(0,0,18)
+	local innerFixture = body:createFixture{shape = innerCircle, density = 0, 
 	friction = 1, restitution = 0.8}
+	innerFixture:setFilterData{categoryBits = 1, maskBits = 1  }
+	
+	
+	local outerCircle = b2.CircleShape.new(0,0,45)
+	local outerfixture = body:createFixture{shape = outerCircle, density = 0, 
+	friction = 1, restitution = 0.8 }
+	outerfixture:setFilterData{categoryBits = 2, maskBits = 1 , groupIndex = -3}
+	
+	--ball.body = body
+	--ball.fixture = fixture
 	ball.body = body
-	ball.fixture = fixture
+	ball.fixture = outerfixture
 
 end
 
