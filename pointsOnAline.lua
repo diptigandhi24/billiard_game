@@ -18,8 +18,8 @@ function pointsOnAline : directionOfprojectBall(Xcueball ,Ycueball , Xtouch ,Yto
 	else
 		self.YrefpointofWall = 0 
 	end
-	print("self.XrefpointofWall :",self.XrefpointofWall )
-	print("self.YrefpointofWall  : ",self.YrefpointofWall )
+	--print("self.XrefpointofWall :",self.XrefpointofWall )
+	--print("self.YrefpointofWall  : ",self.YrefpointofWall )
 end
 
 --lets calculate exact x and y raycast point on the line of cueball and user touch
@@ -35,9 +35,9 @@ function pointsOnAline : twopointSlope(Xcueball ,Ycueball ,Xtouch ,Ytouch)
 -- y-y1 = m (x-x1)  , where y1 and x1 are the know points and x and y are unknow exactraycast point
 --lets first find y
 	local tmpY = (slope *(self.XrefpointofWall - self.Xcueball)) + self.Ycueball
-	print("tmpY : " ,tmpY)
+	--print("tmpY : " ,tmpY)
 	if(tmpY >= 0 and tmpY <=686)then
-		print("tmpyyyyyy")
+		--print("tmpyyyyyy")
 		self.Yraycastpoint2 = tmpY
 	else 
 		self.Yraycastpoint2 = self.YrefpointofWall
@@ -45,15 +45,15 @@ function pointsOnAline : twopointSlope(Xcueball ,Ycueball ,Xtouch ,Ytouch)
 	
 --similarly 
 	local tmpX = ((self.YrefpointofWall -self.Ycueball) / slope ) + self.Ycueball
-	print("tmpX : " ,tmpX)
-	print()
+	--print("tmpX : " ,tmpX)
+	--print()
 	if(tmpX >=0 and tmpX <= 1199)
 	then
-		print("tmpxxxxxxxxxx")
+		--print("tmpxxxxxxxxxx")
 		self.Xraycastpoint2 = tmpX
 	else
 		self.Xraycastpoint2= self.XrefpointofWall
 	end
-	print("self.Yraycastpoint2 : ",self.Yraycastpoint2)
-	print("self.Xraycastpoint2 :" ,self.Xraycastpoint2 )
+	--print("self.Yraycastpoint2 : ",self.Yraycastpoint2)
+	--print("self.Xraycastpoint2 :" ,self.Xraycastpoint2 )
 end
