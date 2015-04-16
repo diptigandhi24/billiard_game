@@ -1,34 +1,66 @@
 billiardBalls = Core.class (Sprite)
 
-function billiardBalls : init(physicsWorldOfbilliard)
+function billiardBalls : init(world)
 
-	self.addsBallsToPhysicsWorld = physicsWorldOfbilliard
 	self.cueBall = Bitmap.new(Texture.new("img/cueball.png"))
 	self.cueBall:setAnchorPoint(0.5,0.5)
 	self.cueBall:setPosition( 400 , 400)
-	self:physicsPropertyOfBall(self.cueBall)
+	self:physicsPropertyOfBall(self.cueBall,world)
 	self:addChild(self.cueBall)
 
 --Arrangement of the coloredBalls
 	self.coloredBalls = Bitmap.new(Texture.new("img/colouredBall.png"))
 	self.coloredBalls:setAnchorPoint(0.5,0.5)
 	self.coloredBalls:setPosition(1000,600)
-	self:physicsPropertyOfBall(self.coloredBalls)
+	self:physicsPropertyOfBall(self.coloredBalls ,world)
 	self:addChild(self.coloredBalls)
 	
 --create the projection of cueball and detect the collision in the path
-	self:addChild(cueBallProjection.new( self.addsBallsToPhysicsWorld , self.cueBall))
+	self.projectionObj = cueBallProjection.new( world, self.cueBall)
+	self:addChild(self.projectionObj)
 	
 
 -- update the position of ball every frame
-	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
+	self:addEventListener(Event.ENTER_FRAME, function()
+	world:step(1/60, 8,3)
+	local zeroVelocity =1
+	for i = 1, self:getNumChildren() do
+		--get specific sprite
+		local sprite = self:getChildAt(i)
+		-- check if sprite HAS a body (ie, physical object reference we added)
+		if sprite.body then
+			--update position to match box2d world object's position
+			--get physical body reference
+			local body = sprite.body
+			--get body coordinates
+			local bodyX, bodyY = body:getPosition()
+			if body:getLinearVelocity() == 0 and body.name == "ball" then
+				zeroVelocity = zeroVelocity + 1
+			--print("Velocity of the boby" , body.name , body:getLinearVelocity())
+			if(zeroVelocity == self:getNumChildren())then
+				self.projectionObj:addEventListener(Event.MOUSE_DOWN , self.projectionObj.onMouseDown , self.projectionObj)
+				self.projectionObj:addEventListener(Event.MOUSE_MOVE, self.projectionObj.onMouseMove,self.projectionObj)
+				self.projectionObj:addEventListener(Event.MOUSE_UP, self.projectionObj.onMouseUp, self.projectionObj)
+			end
+			
+			
+			end
+			--apply coordinates to sprite
+			sprite:setPosition(bodyX, bodyY)
+			--apply rotation to sprite
+			--sprite:setRotation(body:getAngle() * 180 / math.pi)
+		end
+	end
+	end)
 	
 end
 
-function billiardBalls:physicsPropertyOfBall(ball  )
+function billiardBalls:physicsPropertyOfBall(ball,world  )
  
-	local body = self.addsBallsToPhysicsWorld:createBody{type = b2.DYNAMIC_BODY}
+	local body = world:createBody{type = b2.DYNAMIC_BODY}
+	body.name = "ball"
 	body:setPosition(ball:getX(),ball:getY())
+	body:setLinearDamping(0.5)
 	
 	local innerCircle = b2.CircleShape.new(0,0,18)
 	local innerFixture = body:createFixture{shape = innerCircle, density = 0, 
@@ -43,13 +75,15 @@ function billiardBalls:physicsPropertyOfBall(ball  )
 	
 	--ball.body = body
 	--ball.fixture = fixture
+	
 	ball.body = body
+	
 	ball.fixture = outerfixture
 
 end
 
-function billiardBalls:onEnterFrame()
-	self.addsBallsToPhysicsWorld:step(1/60, 8,3)
+--[[function billiardBalls:onEnterFrame(world)
+	world:step(1/60, 8,3)
 	
 	for i = 1, self:getNumChildren() do
 		--get specific sprite
@@ -68,4 +102,4 @@ function billiardBalls:onEnterFrame()
 		end
 	end
 
- end
+ end]]--
