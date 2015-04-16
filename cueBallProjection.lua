@@ -27,6 +27,7 @@ cueBallProjection = Core.class(Sprite)
 	
 	--Default projected path of the ball will be  in the direction of user touch and till the  start of the wall.
 	--To find that point on the wall 
+	--calculating the distance of cueball from the wall
 	self.pointobj = pointsOnAline.new()
 	
 	
@@ -41,7 +42,7 @@ cueBallProjection = Core.class(Sprite)
  
  function cueBallProjection:raycastCallback (fixture ,hitx , hity , vecx ,vecty,fraction  )
 		
-		print("hit the fixture yeahhhhhhhhh")
+		--print("hit the fixture yeahhhhhhhhh")
 		local setx , sety
 		self.targetx = hitx
 		self.targety = hity
@@ -54,7 +55,7 @@ cueBallProjection = Core.class(Sprite)
 		self.slingshot:lineTo(self.projectBall:getX() ,self.projectBall:getY())
 		self.slingshot:endPath()
 		
-	print("fractionnnnnnnnn : " , fraction)
+	--print("fractionnnnnnnnn : " , fraction)
 	return fraction
 
 
@@ -73,7 +74,7 @@ end
 function cueBallProjection : onMouseMove(event)
 		self.pointobj: twopointSlope(self.cueBall:getX(),self.cueBall:getY(),event.x,event.y)
 		
-		self.world:rayCast(self.cueBall:getX() ,self.cueBall:getY(),self.pointobj.Xraycastpoint2 ,
+		world:rayCast(self.cueBall:getX() ,self.cueBall:getY(),self.pointobj.Xraycastpoint2 ,
 		self.pointobj.Yraycastpoint2, self.raycastCallback ,self )
 		
 		
@@ -85,6 +86,10 @@ function cueBallProjection : onMouseUp(event)
 	
 	local tmpy = (self.projectBall:getY() - self.cueBall:getY()) *2
 	self.cueBall.body:applyForce(tmpx,tmpy,self.projectBall:getX(),self.projectBall:getY())
+	self:removeEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
+	self:removeEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
+	self:removeEventListener(Event.MOUSE_UP, self.onMouseUp, self)
+	self.slingshot:clear()
 	
 end
 
