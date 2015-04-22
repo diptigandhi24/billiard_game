@@ -1,13 +1,16 @@
 --not going to add  billiardstick
 require "box2d"
 --lets create an interactive world , where all the objects/actors of the game will be added
-world = b2.World.new(0, 0, true)
+
+world = b2.World.new(0, 0, true) --global world
 
 local createTable = billiardTable.new(world)
+print("Child of the createTable class " , createTable:getNumChildren())
 stage:addChild(createTable)
 
 local createball = billiardBalls.new(world)
 stage:addChild(createball)
+--print("Child of Billiard balls " , parentSprite:getNumChildren())
 --cueball projection will be created in createball class
 --onEnterFrame will be created in billiardBalls class
 --cueballprojection function will be added in createBalls class
@@ -15,11 +18,10 @@ stage:addChild(createball)
 
 
 
-
-
-world:addEventListener(Event.BEGIN_CONTACT , function(e)
+--[[world:addEventListener(Event.BEGIN_CONTACT, function(e)
 		print("contact Begins")
 		local fixtureA = e.fixtureA
+		
 		local fixtureB = e.fixtureB
 		
 		local bodyA = fixtureA:getBody()
@@ -27,13 +29,14 @@ world:addEventListener(Event.BEGIN_CONTACT , function(e)
 		
 		print("begin contact: "..bodyA.name.."<->"..bodyB.name)
 		if(bodyA.name =="Pockets" and bodyB.name == "ball")then
-			print("delete ballllllll")
-			--world:destroyBody(bodyB)
+			createball.deleteBody = true
+			world:destroyBody(bodyB)
 			--createball:removeChild(createball.cueBall)
-			
+			createball.deleteball = bodyB
 			
 		end
-	end)
+	end)]]--
+
 
 --[[for i=1 ,15 do
 
