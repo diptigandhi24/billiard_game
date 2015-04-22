@@ -69,15 +69,16 @@ function billiardBalls:physicsPropertyOfBall(ball,world  )
 	body.name = "ball"
 	body:setPosition(ball:getX(),ball:getY())
 	body:setLinearDamping(0.5)
+	body:setAngularDamping(1)
 	
-	local innerCircle = b2.CircleShape.new(0,0,18)
-	local innerFixture = body:createFixture{shape = innerCircle, density = 0, 
+	local innerCircle = b2.CircleShape.new(0,0,20)
+	local innerFixture = body:createFixture{shape = innerCircle, density = 1, 
 	friction = 1, restitution = 0.8}
 	innerFixture:setFilterData{categoryBits = 1, maskBits = 1  }
 	
 	
-	local outerCircle = b2.CircleShape.new(0,0,45)
-	local outerfixture = body:createFixture{shape = outerCircle, density = 0, 
+	local outerCircle = b2.CircleShape.new(0,0,40)
+	local outerfixture = body:createFixture{shape = outerCircle, density = 1, 
 	friction = 1, restitution = 0.8 }
 	outerfixture:setFilterData{categoryBits = 2, maskBits = 1 , groupIndex = -3}
 	
