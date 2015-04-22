@@ -29,41 +29,13 @@ function billiardBalls : init()
 	
 
 -- update the position of ball every frame
-	self:addEventListener(Event.ENTER_FRAME, function()
-	world:step(1/60, 8,3)
-	local zeroVelocity =1
-	for i = 1, self:getNumChildren() do
-		--get specific sprite
-		local sprite = self:getChildAt(i)
-		-- check if sprite HAS a body (ie, physical object reference we added)
-		if sprite.body then
-			--update position to match box2d world object's position
-			--get physical body reference
-			local body = sprite.body
-			--get body coordinates
-			local bodyX, bodyY = body:getPosition()
-			if body:getLinearVelocity() == 0 and body.name == "ball" then
-				zeroVelocity = zeroVelocity + 1
-			--print("Velocity of the boby" , body.name , body:getLinearVelocity())
-			if(zeroVelocity == self:getNumChildren())then
-				self.projectionObj:addEventListener(Event.MOUSE_DOWN , self.projectionObj.onMouseDown , self.projectionObj)
-				self.projectionObj:addEventListener(Event.MOUSE_MOVE, self.projectionObj.onMouseMove,self.projectionObj)
-				self.projectionObj:addEventListener(Event.MOUSE_UP, self.projectionObj.onMouseUp, self.projectionObj)
-			end
-			
-			
-			end
-			--apply coordinates to sprite
-			sprite:setPosition(bodyX, bodyY)
-			--apply rotation to sprite
-			--sprite:setRotation(body:getAngle() * 180 / math.pi)
-		end
-	end
-	end)
-	
+	world:addEventListener(Event.BEGIN_CONTACT, self.onContact ,self )
+	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame , self)
+	self.deleteBalls ={}
 end
 
-function billiardBalls:physicsPropertyOfBall(ball,world  )
+function billiardBalls:physicsPropertyOfBall(ball
+)
  
 	local body = world:createBody{type = b2.DYNAMIC_BODY}
 	body.name = "ball"
@@ -87,7 +59,7 @@ function billiardBalls:physicsPropertyOfBall(ball,world  )
 	
 	ball.body = body
 	
-	ball.fixture = outerfixture
+	--ball.fixture = outerfixture
 
 end
 function billiardBalls:onContact(e)
@@ -109,18 +81,34 @@ function billiardBalls:onContact(e)
 
 end
 
-	world:step(1/60, 8,3)
+
+function billiardBalls:onEnterFrame()
 	
-	for i = 1, self:getNumChildren() do
+	world:step(1/60, 8,3)
+	local zeroVelocity =1
+	
+	--print("NUmber of child on Enterrrrrrrrrrrrr" , self:getNumChildren())
+	for i = 1, self:getNumChildren()-1  do
 		--get specific sprite
 		local sprite = self:getChildAt(i)
+		print("SSSSSSpppppprrrrrriiiiittttttteeeee" , sprite.body)
 		-- check if sprite HAS a body (ie, physical object reference we added)
-		if sprite.body then
+		if sprite.body  then
 			--update position to match box2d world object's position
 			--get physical body reference
 			local body = sprite.body
 			--get body coordinates
 			local bodyX, bodyY = body:getPosition()
+			if body:getLinearVelocity() == 0 and body.name == "ball" then
+				zeroVelocity = zeroVelocity + 1
+			--print("Velocity of the boby" , body.name , body:getLinearVelocity())
+				if(zeroVelocity == self:getNumChildren())then
+				--print("All the child at zero velocity")
+				self.projectionObj:addEventListener(Event.MOUSE_DOWN , self.projectionObj.onMouseDown , self.projectionObj)
+				self.projectionObj:addEventListener(Event.MOUSE_MOVE, self.projectionObj.onMouseMove,self.projectionObj)
+				self.projectionObj:addEventListener(Event.MOUSE_UP, self.projectionObj.onMouseUp, self.projectionObj)
+				end
+			end
 			--apply coordinates to sprite
 			sprite:setPosition(bodyX, bodyY)
 			if(sprite.body.delete)then
@@ -140,5 +128,15 @@ end
 			--sprite:setRotation(body:getAngle() * 180 / math.pi)
 		end
 	end
+	
+	--[[ for body,_ in pairs(self.deleteBalls) do
+		local sprite = self:getChildAt(body)
+		print("YAAAAAAAAAYYYYYYYYYYYYYYYYYYYYYYYYY" , body.name)
+		if body ~=nil then
+        world:destroyBody(body)
+        self.deleteBalls[body] = nil    -- this is totally valid inside a pairs loop
+		stage:removeChild(sprite)
+		end
+    end]]--
+end
 
- end]]--
