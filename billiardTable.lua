@@ -18,20 +18,20 @@ function billiardTable:init(world)
 	railWidth  = 63
 	print("Width and height of the table" , tableWidth , tableHeight)
 	--lets create table rails or cusion to stop the ball going off the table and for rebounding
-	local toprail = self:interactiveRails(100,63,0 , 458 ,world)
-	local toprailR = self:interactiveRails(638,63,0,470,world)
-	local bottomrail = self:interactiveRails(542,621,3.1415 ,455,world)
-	local bottomrail = self:interactiveRails(1094 , 621 , 3.1415 , 470 ,world)
-	local footrail = self:interactiveRails(71,581,-1.5707,488,world)
-	local headrail = self:interactiveRails(1123 , 104 , 1.5707 ,486 ,world)
+	local toprail = self:interactiveRails(100,63,0 , 458 )
+	local toprailR = self:interactiveRails(638,63,0,470)
+	local bottomrail = self:interactiveRails(542,621,3.1415 ,455)
+	local bottomrail = self:interactiveRails(1094 , 621 , 3.1415 , 470)
+	local footrail = self:interactiveRails(71,581,-1.5707,488)
+	local headrail = self:interactiveRails(1123 , 104 , 1.5707 ,486 )
 	
 	-- also make the pocket of the table active in physics world
-	self:createpockets (55,55,world)
-	self:createpockets(592 , 55,world)
-	self:createpockets(1143 , 55,world)
-	self:createpockets(55,628,world)
-	self:createpockets(590,628,world)
-	self:createpockets(1143,631,world)
+	self:createpockets (55,55)
+	self:createpockets(592 , 55)
+	self:createpockets(1143 , 55)
+	self:createpockets(55,628)
+	self:createpockets(590,628)
+	self:createpockets(1143,631)
 	print("Printing Corner Pockets valuse " , cornerPockets)
 	
 	--just for reference, debug draw is very useful, to see the things happening in physics world
@@ -44,7 +44,7 @@ end
 
 
 
-function billiardTable : interactiveRails(x,y,angle,longestSide,world)
+function billiardTable : interactiveRails(x,y,angle,longestSide)
 	local minimum = longestSide-15
 	local body = world :createBody{type = b2.STATIC_BODY}
 	body.name = "rail"
@@ -66,8 +66,9 @@ function billiardTable : interactiveRails(x,y,angle,longestSide,world)
 	
 end
 
-function billiardTable:createpockets(x,y,world)
+function billiardTable:createpockets(x,y)
 	local body = world:createBody{type = b2.STATIC_BODY }
+	--body:setAnchorPoint(0.5 , 0.5)
 	body.name = "Pockets"
 	
 	local innerCircle = b2.CircleShape.new(x, y, 38)
