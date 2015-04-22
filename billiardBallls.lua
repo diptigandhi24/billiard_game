@@ -1,19 +1,27 @@
 billiardBalls = Core.class (Sprite)
 
-function billiardBalls : init(world)
+function billiardBalls : init()
 
 	self.cueBall = Bitmap.new(Texture.new("img/cueball.png"))
 	self.cueBall:setAnchorPoint(0.5,0.5)
 	self.cueBall:setPosition( 400 , 400)
 	self:physicsPropertyOfBall(self.cueBall,world)
 	self:addChild(self.cueBall)
+	self.name = "cueBall"
 
 --Arrangement of the coloredBalls
 	self.coloredBalls = Bitmap.new(Texture.new("img/colouredBall.png"))
 	self.coloredBalls:setAnchorPoint(0.5,0.5)
-	self.coloredBalls:setPosition(1000,600)
+	self.coloredBalls:setPosition(800,400)
 	self:physicsPropertyOfBall(self.coloredBalls ,world)
 	self:addChild(self.coloredBalls)
+	self.name = "coloredBalls"
+	
+	self.coloredBalls2 = Bitmap.new(Texture.new("img/colouredBall.png"))
+	self.coloredBalls2:setAnchorPoint(0.5,0.5)
+	self.coloredBalls2:setPosition(1000,500)
+	self:physicsPropertyOfBall(self.coloredBalls2 ,world)
+	self:addChild(self.coloredBalls2)
 	
 --create the projection of cueball and detect the collision in the path
 	self.projectionObj = cueBallProjection.new( world, self.cueBall)
