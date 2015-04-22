@@ -82,9 +82,9 @@ function cueBallProjection : onMouseMove(event)
 
 end
 function cueBallProjection : onMouseUp(event)
-	local tmpx = (self.projectBall:getX() - self.cueBall:getX()) *2
+	local tmpx = (self.projectBall:getX() - self.cueBall:getX()) *30
 	
-	local tmpy = (self.projectBall:getY() - self.cueBall:getY()) *2
+	local tmpy = (self.projectBall:getY() - self.cueBall:getY()) *30
 	self.cueBall.body:applyForce(tmpx,tmpy,self.projectBall:getX(),self.projectBall:getY())
 	self:removeEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
 	self:removeEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
