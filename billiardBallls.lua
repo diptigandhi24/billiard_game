@@ -90,8 +90,25 @@ function billiardBalls:physicsPropertyOfBall(ball,world  )
 	ball.fixture = outerfixture
 
 end
+function billiardBalls:onContact(e)
+	local fixtureA = e.fixtureA
+		
+		local fixtureB = e.fixtureB
+		
+		local bodyA = fixtureA:getBody()
+		local bodyB = fixtureB :getBody()
+		
+		print("begin contact: "..bodyA.name.."<->"..bodyB.name)
+		if(bodyA.name =="Pockets" and bodyB.name == "ball")then
+			--createball.deleteBody = true
+			--bodyB:setRotation(2.12)
+			bodyB.delete = true
 
---[[function billiardBalls:onEnterFrame(world)
+			
+		end
+
+end
+
 	world:step(1/60, 8,3)
 	
 	for i = 1, self:getNumChildren() do
@@ -106,6 +123,19 @@ end
 			local bodyX, bodyY = body:getPosition()
 			--apply coordinates to sprite
 			sprite:setPosition(bodyX, bodyY)
+			if(sprite.body.delete)then
+			--print("YAAAAAAAAAYYYYYYYYYYYYYYYYYYYYYYYYY" , sprite .body.name)
+				world:destroyBody(body)
+				sprite.body.delete = false
+				--sprite.body =false
+				--print("NUmber of child " , self:getNumChildren())
+				--print("IIIIIIIIIIIIIIIIIIIIIII" , i)
+				self:removeChildAt(i)
+				--sprite.body = nil
+				--sprite:removeChildAt(i)
+				--sprite.body.delete = false
+			
+			end
 			--apply rotation to sprite
 			--sprite:setRotation(body:getAngle() * 180 / math.pi)
 		end
