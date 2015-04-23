@@ -12,6 +12,7 @@ cueBallProjection = Core.class(Sprite)
 	self.projectBall =Bitmap.new(Texture.new("img/projectedCueBall.png"))
 	self.projectBall:setPosition(600 , 400)
 	self.projectBall:setAnchorPoint(0.5,0.5)
+	self:addChild(self.projectBall)
 	
 	
 	--when the screen is loaded ,lets show the default projected path of the cueBall
@@ -21,9 +22,8 @@ cueBallProjection = Core.class(Sprite)
 	self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY())
 	self.slingshot:lineTo(self.projectBall:getX(), self.projectBall:getY())
 	self.slingshot:endPath()
-	
 	self:addChild(self.slingshot)
-	self:addChild(self.projectBall)
+	
 	
 	--Default projected path of the ball will be  in the direction of user touch and till the  start of the wall.
 	--To find that point on the wall 
