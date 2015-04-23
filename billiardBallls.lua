@@ -1,5 +1,10 @@
 billiardBalls = Core.class (Sprite)
 
+BALLS_MASK = 1
+REFERENCE_BALLMASK = 2
+WALLS_MASK = 4
+REFERENCE_WALLSMASK = 6
+
 function billiardBalls : init()
 
 	self.cueBall = Bitmap.new(Texture.new("img/cueball.png"))
@@ -31,7 +36,6 @@ function billiardBalls : init()
 -- update the position of ball every frame
 	world:addEventListener(Event.BEGIN_CONTACT, self.onContact ,self )
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame , self)
-	self.deleteBalls ={}
 end
 
 function billiardBalls:physicsPropertyOfBall(ball
@@ -44,15 +48,14 @@ function billiardBalls:physicsPropertyOfBall(ball
 	body:setAngularDamping(1)
 	
 	local innerCircle = b2.CircleShape.new(0,0,20)
-	local innerFixture = body:createFixture{shape = innerCircle, density = 1, 
-	friction = 1, restitution = 0.8}
-	innerFixture:setFilterData{categoryBits = 1, maskBits = 1  }
+	local innerFixture = body:createFixture{shape = innerCircle, density = 1, friction = 1, restitution = 0.8}
+	--All the balls will collide with other balls and walls
+	innerFixture:setFilterData{categoryBits = BALLS_MASK, maskBits = BALLS_MASK+WALLS_MASK  }
 	
-	
+	--outerFixture doesnt collide with any fixture
 	local outerCircle = b2.CircleShape.new(0,0,40)
-	local outerfixture = body:createFixture{shape = outerCircle, density = 1, 
-	friction = 1, restitution = 0.8 }
-	outerfixture:setFilterData{categoryBits = 2, maskBits = 1 , groupIndex = -3}
+	local outerfixture = body:createFixture{shape = outerCircle, density = 1, friction = 1, restitution = 0.8 }
+	outerfixture:setFilterData{categoryBits = REFERENCE_BALLMASK, maskBits = 1 , groupIndex = -3}
 	
 	--ball.body = body
 	--ball.fixture = fixture
@@ -88,10 +91,10 @@ function billiardBalls:onEnterFrame()
 	local zeroVelocity =1
 	
 	--print("NUmber of child on Enterrrrrrrrrrrrr" , self:getNumChildren())
-	for i = 1, self:getNumChildren()-1  do
+	for i = self:getNumChildren() , 1,-1  do
 		--get specific sprite
 		local sprite = self:getChildAt(i)
-		print("SSSSSSpppppprrrrrriiiiittttttteeeee" , sprite.body)
+		--print("SSSSSSpppppprrrrrriiiiittttttteeeee" , sprite.body)
 		-- check if sprite HAS a body (ie, physical object reference we added)
 		if sprite.body  then
 			--update position to match box2d world object's position
@@ -118,7 +121,7 @@ function billiardBalls:onEnterFrame()
 				--sprite.body =false
 				--print("NUmber of child " , self:getNumChildren())
 				--print("IIIIIIIIIIIIIIIIIIIIIII" , i)
-				self:removeChildAt(i)
+				self:removeChild(sprite)
 				--sprite.body = nil
 				--sprite:removeChildAt(i)
 				--sprite.body.delete = false
@@ -129,14 +132,6 @@ function billiardBalls:onEnterFrame()
 		end
 	end
 	
-	--[[ for body,_ in pairs(self.deleteBalls) do
-		local sprite = self:getChildAt(body)
-		print("YAAAAAAAAAYYYYYYYYYYYYYYYYYYYYYYYYY" , body.name)
-		if body ~=nil then
-        world:destroyBody(body)
-        self.deleteBalls[body] = nil    -- this is totally valid inside a pairs loop
-		stage:removeChild(sprite)
-		end
-    end]]--
+	
 end
 
