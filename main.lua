@@ -4,11 +4,10 @@ require "box2d"
 
 world = b2.World.new(0, 0, true) --global world
 
-local createTable = billiardTable.new(world)
-print("Child of the createTable class " , createTable:getNumChildren())
+local createTable = billiardTable.new()
 stage:addChild(createTable)
 
-local createball = billiardBalls.new(world)
+local createball = billiardBalls.new()
 stage:addChild(createball)
 --print("Child of Billiard balls " , parentSprite:getNumChildren())
 --cueball projection will be created in createball class
