@@ -88,47 +88,41 @@ end
 function billiardBalls:onEnterFrame()
 	
 	world:step(1/60, 8,3)
-	local zeroVelocity =1
+	local zeroVelocityObjects =0
 	
-	--print("NUmber of child on Enterrrrrrrrrrrrr" , self:getNumChildren())
+--  Reverse for loop in which last in first out (lifo) is applied 
+--  for better explaination refer http://howto.oz-apps.com/2011/09/tower-of-babel-no-honoi-maybe.html
 	for i = self:getNumChildren() , 1,-1  do
 		--get specific sprite
 		local sprite = self:getChildAt(i)
-		--print("SSSSSSpppppprrrrrriiiiittttttteeeee" , sprite.body)
-		-- check if sprite HAS a body (ie, physical object reference we added)
+			-- check if sprite HAS a body (ie, physical object reference we added)
 		if sprite.body  then
 			--update position to match box2d world object's position
 			--get physical body reference
 			local body = sprite.body
 			--get body coordinates
 			local bodyX, bodyY = body:getPosition()
+			--If all the objects are at rest then unable the touch events in the game
 			if body:getLinearVelocity() == 0 and body.name == "ball" then
-				zeroVelocity = zeroVelocity + 1
-			--print("Velocity of the boby" , body.name , body:getLinearVelocity())
+				zeroVelocityobjects = zeroVelocityobjects + 1
 				if(zeroVelocity == self:getNumChildren())then
-				--print("All the child at zero velocity")
-				self.projectionObj:addEventListener(Event.MOUSE_DOWN , self.projectionObj.onMouseDown , self.projectionObj)
-				self.projectionObj:addEventListener(Event.MOUSE_MOVE, self.projectionObj.onMouseMove,self.projectionObj)
-				self.projectionObj:addEventListener(Event.MOUSE_UP, self.projectionObj.onMouseUp, self.projectionObj)
+					
+					self.projectionObj:addEventListener(Event.MOUSE_DOWN , self.projectionObj.onMouseDown , self.projectionObj)
+					self.projectionObj:addEventListener(Event.MOUSE_MOVE, self.projectionObj.onMouseMove,self.projectionObj)
+					self.projectionObj:addEventListener(Event.MOUSE_UP, self.projectionObj.onMouseUp, self.projectionObj)
 				end
 			end
 			--apply coordinates to sprite
 			sprite:setPosition(bodyX, bodyY)
 			if(sprite.body.delete)then
-			--print("YAAAAAAAAAYYYYYYYYYYYYYYYYYYYYYYYYY" , sprite .body.name)
+			
 				world:destroyBody(body)
 				sprite.body.delete = false
-				--sprite.body =false
-				--print("NUmber of child " , self:getNumChildren())
-				--print("IIIIIIIIIIIIIIIIIIIIIII" , i)
 				self:removeChild(sprite)
-				--sprite.body = nil
-				--sprite:removeChildAt(i)
-				--sprite.body.delete = false
-			
+				
 			end
-			--apply rotation to sprite
-			--sprite:setRotation(body:getAngle() * 180 / math.pi)
+			
+			
 		end
 	end
 	
