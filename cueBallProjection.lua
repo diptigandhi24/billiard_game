@@ -42,11 +42,10 @@ cueBallProjection = Core.class(Sprite)
  
  function cueBallProjection:raycastCallback (fixture ,hitx , hity , vecx ,vecty,fraction  )
 		
-		--print("hit the fixture yeahhhhhhhhh")
+		
 		local setx , sety
 		self.targetx = hitx
 		self.targety = hity
-		--print("Yposition of projectball" ,self.projectBall:getY())
 		self.projectBall:setPosition(hitx ,hity)
 		self.slingshot:clear()
 		self.slingshot:setLineStyle(3, 0x0000FF,1)
@@ -55,7 +54,7 @@ cueBallProjection = Core.class(Sprite)
 		self.slingshot:lineTo(self.projectBall:getX() ,self.projectBall:getY())
 		self.slingshot:endPath()
 		
-	--print("fractionnnnnnnnn : " , fraction)
+	
 	return fraction
 
 
@@ -93,28 +92,7 @@ function cueBallProjection : onMouseUp(event)
 	
 end
 
-function cueBallProjection:onContact()
-	self.coloredBall:setLinearVelocity(self.cueBall:getLinearDamping())
-end
- --[[function cueBallProjection:onEnterFrame()
-	self.world:step(1/60, 8,3)
-	
-	for i = 1, self:getNumChildren() do
-		--get specific sprite
-		local sprite = self:getChildAt(i)
-		-- check if sprite HAS a body (ie, physical object reference we added)
-		if sprite.body then
-			--update position to match box2d world object's position
-			--get physical body reference
-			local body = sprite.body
-			--get body coordinates
-			local bodyX, bodyY = body:getPosition()
-			--apply coordinates to sprite
-			sprite:setPosition(bodyX, bodyY)
-			--apply rotation to sprite
-			--sprite:setRotation(body:getAngle() * 180 / math.pi)
-		end
-	end
 
- end]]--
+
+
  
