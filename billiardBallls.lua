@@ -5,7 +5,7 @@ REFERENCE_BALLMASK = 2
 WALLS_MASK = 4
 REFERENCE_WALLSMASK = 6
 
-function billiardBalls : init()
+function billiardBalls : init(BitmapOfTable)
 
 	self.cueBall = Bitmap.new(Texture.new("img/cueball.png"))
 	self.cueBall:setAnchorPoint(0.5,0.5)
@@ -29,7 +29,7 @@ function billiardBalls : init()
 	self:addChild(self.coloredBalls2)
 	
 --create the projection of cueball and detect the collision in the path
-	self.projectionObj = cueBallProjection.new( world, self.cueBall)
+	self.projectionObj = cueBallProjection.new( world, self.cueBall , BitmapOfTable)
 	self:addChild(self.projectionObj)
 	
 
@@ -65,6 +65,7 @@ function billiardBalls:physicsPropertyOfBall(ball
 	--ball.fixture = outerfixture
 
 end
+
 function billiardBalls:onContact(e)
 	local fixtureA = e.fixtureA
 		
@@ -88,7 +89,7 @@ end
 function billiardBalls:onEnterFrame()
 	
 	world:step(1/60, 8,3)
-	local zeroVelocityObjects =0
+	local zeroVelocityObjects =1 -- because in lua counting of elements/indexes starts from 1 and not from zero. 
 	
 --  Reverse for loop in which last in first out (lifo) is applied 
 --  for better explaination refer http://howto.oz-apps.com/2011/09/tower-of-babel-no-honoi-maybe.html
@@ -104,12 +105,13 @@ function billiardBalls:onEnterFrame()
 			local bodyX, bodyY = body:getPosition()
 			--If all the objects are at rest then unable the touch events in the game
 			if body:getLinearVelocity() == 0 and body.name == "ball" then
-				zeroVelocityobjects = zeroVelocityobjects + 1
-				if(zeroVelocity == self:getNumChildren())then
+				zeroVelocityObjects = zeroVelocityObjects + 1
+				if(zeroVelocityObjects == self:getNumChildren())then
 					
 					self.projectionObj:addEventListener(Event.MOUSE_DOWN , self.projectionObj.onMouseDown , self.projectionObj)
 					self.projectionObj:addEventListener(Event.MOUSE_MOVE, self.projectionObj.onMouseMove,self.projectionObj)
 					self.projectionObj:addEventListener(Event.MOUSE_UP, self.projectionObj.onMouseUp, self.projectionObj)
+					self.projectionObj.projectBall:setVisible(true)
 				end
 			end
 			--apply coordinates to sprite
