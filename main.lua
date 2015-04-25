@@ -7,7 +7,7 @@ world = b2.World.new(0, 0, true) --global world
 local createTable = billiardTable.new()
 stage:addChild(createTable)
 
-local createball = billiardBalls.new()
+local createball = billiardBalls.new(createTable.table)
 stage:addChild(createball)
 --print("Child of Billiard balls " , parentSprite:getNumChildren())
 --cueball projection will be created in createball class
@@ -17,24 +17,7 @@ stage:addChild(createball)
 
 
 
---[[world:addEventListener(Event.BEGIN_CONTACT, function(e)
-		print("contact Begins")
-		local fixtureA = e.fixtureA
-		
-		local fixtureB = e.fixtureB
-		
-		local bodyA = fixtureA:getBody()
-		local bodyB = fixtureB :getBody()
-		
-		print("begin contact: "..bodyA.name.."<->"..bodyB.name)
-		if(bodyA.name =="Pockets" and bodyB.name == "ball")then
-			createball.deleteBody = true
-			world:destroyBody(bodyB)
-			--createball:removeChild(createball.cueBall)
-			createball.deleteball = bodyB
-			
-		end
-	end)]]--
+
 
 
 --[[for i=1 ,15 do
