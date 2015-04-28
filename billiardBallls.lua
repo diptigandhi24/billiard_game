@@ -7,12 +7,7 @@ REFERENCE_WALLSMASK = 6
 
 function billiardBalls : init(BitmapOfTable)
 
-	self.cueBall = Bitmap.new(Texture.new("img/cueball.png"))
-	self.cueBall:setAnchorPoint(0.5,0.5)
-	self.cueBall:setPosition( 400 , 400)
-	self:physicsPropertyOfBall(self.cueBall,world)
-	self:addChild(self.cueBall)
-	self.name = "cueBall"
+	self:addCueball(400,400)
 
 --Arrangement of the coloredBalls
 	self.coloredBalls = Bitmap.new(Texture.new("img/colouredBall.png"))
@@ -20,13 +15,14 @@ function billiardBalls : init(BitmapOfTable)
 	self.coloredBalls:setPosition(800,400)
 	self:physicsPropertyOfBall(self.coloredBalls ,world)
 	self:addChild(self.coloredBalls)
-	self.name = "coloredBalls"
+	self.coloredBalls.name = "coloredBalls"
 	
 	self.coloredBalls2 = Bitmap.new(Texture.new("img/colouredBall.png"))
 	self.coloredBalls2:setAnchorPoint(0.5,0.5)
 	self.coloredBalls2:setPosition(1000,500)
 	self:physicsPropertyOfBall(self.coloredBalls2 ,world)
 	self:addChild(self.coloredBalls2)
+	self.coloredBalls2.name = "coloredBalls"
 	
 --create the projection of cueball and detect the collision in the path
 	self.projectionObj = cueBallProjection.new( world, self.cueBall , BitmapOfTable)
@@ -85,6 +81,15 @@ function billiardBalls:onContact(e)
 
 end
 
+function billiardBalls:addCueball(x,y)
+	self.cueBall = Bitmap.new(Texture.new("img/cueball.png"))
+	self.cueBall:setAnchorPoint(0.5,0.5)
+	self.cueBall:setPosition( x ,y)
+	self:physicsPropertyOfBall(self.cueBall,world)
+	self:addChild(self.cueBall)
+	self.cueBall.name = "cueBall"
+
+end
 
 function billiardBalls:onEnterFrame()
 	
@@ -96,6 +101,7 @@ function billiardBalls:onEnterFrame()
 	for i = self:getNumChildren() , 1,-1  do
 		--get specific sprite
 		local sprite = self:getChildAt(i)
+		
 			-- check if sprite HAS a body (ie, physical object reference we added)
 		if sprite.body  then
 			--update position to match box2d world object's position
@@ -103,6 +109,10 @@ function billiardBalls:onEnterFrame()
 			local body = sprite.body
 			--get body coordinates
 			local bodyX, bodyY = body:getPosition()
+			
+			if sprite.name == cueBall and sprite == nil then
+				self:addCueball(400,400)
+			end
 			--If all the objects are at rest then unable the touch events in the game
 			if body:getLinearVelocity() == 0 and body.name == "ball" then
 				zeroVelocityObjects = zeroVelocityObjects + 1
@@ -112,17 +122,31 @@ function billiardBalls:onEnterFrame()
 					self.projectionObj:addEventListener(Event.MOUSE_MOVE, self.projectionObj.onMouseMove,self.projectionObj)
 					self.projectionObj:addEventListener(Event.MOUSE_UP, self.projectionObj.onMouseUp, self.projectionObj)
 					self.projectionObj.projectBall:setVisible(true)
+					world:rayCast(self.projectionObj.cueBall:getX() ,self.projectionObj.cueBall:getY(),self.projectionObj.projectBall:getX(),self.projectionObj.projectBall:getY(), self.projectionObj.raycastCallback ,self.projectionObj)
 				end
 			end
 			--apply coordinates to sprite
 			sprite:setPosition(bodyX, bodyY)
 			if(sprite.body.delete)then
-			
+				
 				world:destroyBody(body)
 				sprite.body.delete = false
+				print("Sprite NAMEEEEEEEEEE" , sprite.name)
+				
 				self:removeChild(sprite)
+				print("Sprite NAMEEEEEEEEEE" , sprite.name)
+				--sprite = nil
+				print("Sprite NAMEEEEEEEEEE" , sprite.name)
+				if sprite.name == "cueBall"  then
+				print("YEEEEPPPPPPPPP")
+					self:addCueball(400,400)
+				end
+				print("Sprite NAMEEEEEEEEEE" , sprite.name)
 				
 			end
+			--if cueball gets deleted from the game then add it again 
+			
+			
 			
 			
 		end
