@@ -1,9 +1,12 @@
 <project>
- <properties autorotation="0" encryptAssets="0" fps="60" scaleMode="0" mouseToTouch="1" iosDevice="0" packageName="com.yourdomain.yourapp" logicalHeight="480" logicalWidth="320" mouseTouchOrder="0" encryptCode="0" retinaDisplay="0" touchToMouse="1" assetsOnly="0" orientation="1" architecture="0">
-  <imageScales/>
+ <properties autorotation="0" encryptAssets="0" fps="60" scaleMode="5" mouseToTouch="1" iosDevice="0" packageName="com.goodHabits.billiard" logicalHeight="1280" logicalWidth="800" mouseTouchOrder="0" encryptCode="0" retinaDisplay="0" touchToMouse="1" assetsOnly="0" orientation="1" architecture="1">
+  <imageScales>
+   <scale suffix="@2x" scale="2"/>
+   <scale suffix="@1.5x" scale="1.5"/>
+  </imageScales>
  </properties>
+ <file source="RaycastPoints.lua"/>
  <file source="billiardBallls.lua"/>
- <file source="pointsOnAline.lua"/>
  <file source="cueBallProjection.lua"/>
  <folder name="img">
   <file source="img/colouredBall.png"/>
