@@ -18,7 +18,9 @@ function RaycastPoints : directionofRaycast(Xcueball ,Ycueball , Xtouch ,Ytouch)
 	else
 		self.YrefpointofRaycast = 0 
 	end
-	
+	print("User X and Y touch " , Xtouch , Ytouch)
+	print("Reference point on the wall is " , self.XrefpointofRaycast ,self.YrefpointofRaycast)
+	print("X and Y of CueBall " , Xcueball , Ycueball)
 end
 
 --Default raycast length will be from cueball to the end of the table
@@ -30,6 +32,7 @@ function RaycastPoints : lengthofRaycast(Xcueball ,Ycueball ,Xtouch ,Ytouch)
 	self.Ytouch = Ytouch
 	self:directionofRaycast(self.Xcueball ,self.Ycueball , self.Xtouch ,self.Ytouch)
 	local slope = (self.Ycueball - self.Ytouch) / (self.Xcueball - self.Xtouch) 
+	print("Slope Of ray cast " , slope)
 	
 -- y-y1 = m (x-x1)  , where y1 and x1 are the know points and x and y are unknow exactraycast point
 --lets first find y
@@ -37,18 +40,22 @@ function RaycastPoints : lengthofRaycast(Xcueball ,Ycueball ,Xtouch ,Ytouch)
 	--print("tmpY : " ,tmpY)
 	if(tmpY >= 0 and tmpY <=686)then
 		self.Yraycastpoint2 = tmpY
+		print(" Y Value is temporary" , self.Yraycastpoint2)
 	else 
 		self.Yraycastpoint2 = self.YrefpointofRaycast
+		print(" Ys reference value" , self.Yraycastpoint2)
 	end
 	
 --similarly 
-	local tmpX = ((self.YrefpointofRaycast -self.Ycueball) / slope ) + self.Ycueball
+	local tmpX = ((self.YrefpointofRaycast -self.Ycueball) / slope ) + self.Xcueball
 	if(tmpX >=0 and tmpX <= 1199)
 	then
 		
 		self.Xraycastpoint2 = tmpX
+		print(" X Value is temporary" ,self.Xraycastpoint2)
 	else
 		self.Xraycastpoint2= self.XrefpointofRaycast
+		print(" X reference value" ,self.Xraycastpoint2)
 	end
 	
 end
