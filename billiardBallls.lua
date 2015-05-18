@@ -30,7 +30,13 @@ function billiardBalls : init(BitmapOfTable)
 	
 
 -- update the position of ball every frame
+	--When any ball comes in contact with  pockets  , delete the ball
+	
 	world:addEventListener(Event.BEGIN_CONTACT, self.onContact ,self )
+	world:addEventListener(Event.END_CONTACT , self.endContact ,self)
+	
+	-- update the position  of ball every frame
+	--Also you can add and remove the ball only in onEnterFrame function , as world update itself in it.
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame , self)
 	
 	-- The two images added below are invisble when the screen is loaded .They are made visible and are used only when the cueball falls in the pocket. 
@@ -97,9 +103,24 @@ function billiardBalls:onContact(e)
 			--bodyB:setRotation(2.12)
 			bodyB.delete = true
 
-			
+		end
+		if(bodyA.name == "reload" and bodyB.name =="ball")then
+			self.cueballNotPlaceableIndicator:setVisible(true)
 		end
 
+end
+function billiardBalls:endContact(e)
+		print("Contact End ")
+		local fixtureA = e.fixtureA
+		
+		local fixtureB = e.fixtureB
+		
+		local bodyA = fixtureA:getBody()
+		local bodyB = fixtureB :getBody()
+		
+		if(bodyA.name == "reload" and bodyB.name =="ball")then
+			self.cueballNotPlaceableIndicator:setVisible(false)
+		end
 end
 
 function billiardBalls:addCueball(x,y)
