@@ -32,6 +32,27 @@ function billiardBalls : init(BitmapOfTable)
 -- update the position of ball every frame
 	world:addEventListener(Event.BEGIN_CONTACT, self.onContact ,self )
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame , self)
+	
+	-- The two images added below are invisble when the screen is loaded .They are made visible and are used only when the cueball falls in the pocket. 
+	--------- If the cueball ball is deleted reload the ball to user selected place------------
+	-- show the preview of cueball position 
+	self.cueballPositionPreview = Bitmap.new(Texture.new("img/reloadCueball.png"))
+	self.cueballPositionPreview:setPosition(X_INTIAL_CUEBALLPOSITION ,Y_INTIAL_CUEBALLPOSITION)
+	self.cueballPositionPreview:setAnchorPoint(0.5 , 0.5)
+	self:addChild(self.cueballPositionPreview)
+	self.cueballPositionPreview:setVisible(false)
+	
+	--if the user selected place is not correct then show Noentry image
+	
+	self.cueballNotPlaceableIndicator = Bitmap.new(Texture.new("img/noentry.png"))
+	self.cueballNotPlaceableIndicator:setAnchorPoint(0.5,0.5)
+	self.cueballNotPlaceableIndicator:setPosition(X_INTIAL_CUEBALLPOSITION ,Y_INTIAL_CUEBALLPOSITION)
+	self:addChild(self.cueballNotPlaceableIndicator)
+	self.cueballNotPlaceableIndicator:setVisible(false)
+	
+	
+	print("The number of child billiard balls has in the beginning " , self:getNumChildren())
+	
 end
 
 function billiardBalls:physicsPropertyOfBall(ball
@@ -131,17 +152,20 @@ function billiardBalls:onEnterFrame()
 				
 				world:destroyBody(body)
 				sprite.body.delete = false
-				print("Sprite NAMEEEEEEEEEE" , sprite.name)
-				
 				self:removeChild(sprite)
-				print("Sprite NAMEEEEEEEEEE" , sprite.name)
-				--sprite = nil
-				print("Sprite NAMEEEEEEEEEE" , sprite.name)
-				if sprite.name == "cueBall"  then
-				print("YEEEEPPPPPPPPP")
-					self:addCueball(400,400)
+			
+				
+				if sprite.name == "cueBall"  then	--if the deleted ball is cueball 
+					self.reloadobj = ReloadThecueBall.new(self.cueballPositionPreview ,self.cueballNotPlaceableIndicator )
+					self:addChild(self.reloadobj)
+					
 				end
-				print("Sprite NAMEEEEEEEEEE" , sprite.name)
+				
+				if sprite.body.name =="reload" then
+					self:addCueball(self.reloadobj.SetX , self.reloadobj.SetY )
+					self:removeChild(self.reloadobj)
+					
+				end
 				
 			end
 			--if cueball gets deleted from the game then add it again 
