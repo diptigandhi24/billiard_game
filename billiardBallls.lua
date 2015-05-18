@@ -1,15 +1,22 @@
+--Remember you cannot delete and add ball body anywhere in the game , it is handle by OnEnterFrame function
+
 billiardBalls = Core.class (Sprite)
 
 BALLS_MASK = 1
 REFERENCE_BALLMASK = 2
 WALLS_MASK = 4
-REFERENCE_WALLSMASK = 6
+REFERENCE_WALLSMASK = 8
+PreView_Mask = 16
 
 function billiardBalls : init(BitmapOfTable)
 
-	self:addCueball(400,400)
+	local X_INTIAL_CUEBALLPOSITION = 400
+	local Y_INTIAL_CUEBALLPOSITION = 400
+	
+	self:addCueball(X_INTIAL_CUEBALLPOSITION ,Y_INTIAL_CUEBALLPOSITION)
 
---Arrangement of the coloredBalls
+	--Arrangement of the coloredBalls
+	--Balls are self because they are added to the stage in the main class
 	self.coloredBalls = Bitmap.new(Texture.new("img/colouredBall.png"))
 	self.coloredBalls:setAnchorPoint(0.5,0.5)
 	self.coloredBalls:setPosition(800,400)
@@ -24,7 +31,8 @@ function billiardBalls : init(BitmapOfTable)
 	self:addChild(self.coloredBalls2)
 	self.coloredBalls2.name = "coloredBalls"
 	
---create the projection of cueball and detect the collision in the path
+	--create the projection of cueball and add it to the stage 
+	
 	self.projectionObj = cueBallProjection.new( world, self.cueBall , BitmapOfTable)
 	self:addChild(self.projectionObj)
 	
@@ -61,8 +69,7 @@ function billiardBalls : init(BitmapOfTable)
 	
 end
 
-function billiardBalls:physicsPropertyOfBall(ball
-)
+function billiardBalls:physicsPropertyOfBall(ball)
  
 	local body = world:createBody{type = b2.DYNAMIC_BODY}
 	body.name = "ball"
@@ -71,21 +78,18 @@ function billiardBalls:physicsPropertyOfBall(ball
 	body:setAngularDamping(1)
 	
 	local innerCircle = b2.CircleShape.new(0,0,20)
-	local innerFixture = body:createFixture{shape = innerCircle, density = 1, friction = 1, restitution = 0.8}
+	local innerFixture = body:createFixture{shape = innerCircle, density = 1, friction = 1, restitution = 0.8  }
 	--All the balls will collide with other balls and walls
-	innerFixture:setFilterData{categoryBits = BALLS_MASK, maskBits = BALLS_MASK+WALLS_MASK  }
+	innerFixture:setFilterData{categoryBits = BALLS_MASK, maskBits = BALLS_MASK+WALLS_MASK + PreView_Mask    }
 	
 	--outerFixture doesnt collide with any fixture
 	local outerCircle = b2.CircleShape.new(0,0,40)
 	local outerfixture = body:createFixture{shape = outerCircle, density = 1, friction = 1, restitution = 0.8 }
-	outerfixture:setFilterData{categoryBits = REFERENCE_BALLMASK, maskBits = 1 , groupIndex = -3}
-	
-	--ball.body = body
-	--ball.fixture = fixture
+	outerfixture:setFilterData{ categoryBits = REFERENCE_BALLMASK , maskBits = 1 , groupIndex = -3 }
 	
 	ball.body = body
+	ball.fixture = innerFixture
 	
-	--ball.fixture = outerfixture
 
 end
 
