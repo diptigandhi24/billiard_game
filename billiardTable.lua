@@ -7,10 +7,11 @@ billiardTable = Core.class(Sprite)
 function billiardTable:init()
 
 	self.table = Bitmap.new(Texture.new("img/billiard_table.png"))
+	self.table:setAnchorPoint(0,0)
 	self:addChild(self.table)            -- adds the table object to instance of billiardTable 
 	
 	
-	--Lets create the physics properties of table like cusion for rebounding and pockets to hold the ball 
+	--Lets create the physics properties of table like cusion for rebounding and pockets 
 	--lets create a physics world of billiard game
 	local tableWidth,tableHeight,railWidth,railHeight 
 	tableWidth =self.table:getWidth()
@@ -39,7 +40,7 @@ function billiardTable:init()
 	--just for reference, debug draw is very useful, to see the things happening in physics world
 	local debugDraw = b2.DebugDraw.new()
 	world:setDebugDraw(debugDraw)
-	--self:addChild(debugDraw)
+	self:addChild(debugDraw)
 	
 	
 end
@@ -65,7 +66,7 @@ function billiardTable : interactiveRails(x,y,angle,longestSide)
 			
 			--fixture:setFilterData{categoryBits = 4, maskBits = 1 , groupIndex = -3}
 			--Inner walls collide with all the balls
-			fixture:setFilterData{categoryBits = WALLS_MASK, maskBits = BALLS_MASK , groupIndex = -3}
+			fixture:setFilterData{categoryBits = WALLS_MASK, maskBits = BALLS_MASK  , groupIndex = -3}
 	
 	
 end
@@ -78,7 +79,7 @@ function billiardTable:createpockets(x,y)
 	local innerCircle = b2.CircleShape.new(x, y, 38)
 	local innerFixture = body:createFixture{shape = innerCircle, density = 500.0, 
 						friction = 1, restitution = 0.8}
-		  innerFixture:setFilterData{categoryBits = BALLS_MASK, maskBits = BALLS_MASK }
+		  innerFixture:setFilterData{categoryBits = BALLS_MASK, maskBits = BALLS_MASK + PreView_Mask }
 		  innerFixture:setSensor(true)
 	
 	local outerCircle = b2.CircleShape.new(x, y, 55)
