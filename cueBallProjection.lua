@@ -3,36 +3,33 @@ require"box2d"
 cueBallProjection = Core.class(Sprite)
  
  
- function cueBallProjection:init(billiardworldobj , cueball , BitmapOftable)
+ function cueBallProjection:init( cueBallObj , billiardTableObj)
  
-	self.cueBall = cueball
-	self.tableimage = BitmapOftable
+	self.cueBallObj = cueBallObj
+	self.billiardTableObj = billiardTableObj
 	
-	--lets add a projection of cueball
+	--lets create  project object 
 	self.projectBall =Bitmap.new(Texture.new("img/projectedCueBall.png"))
 	self.projectBall:setPosition(600 , 400)
 	self.projectBall:setAnchorPoint(0.5,0.5)
 	self:addChild(self.projectBall)
 	
 	
-	--when the screen is loaded ,lets show the default projected path of the cueBall
+	--------when the screen is loaded ,lets show the default project path of the cueBall------
+	
+	--initialise the shape object , which will be use to create path
 	self.slingshot = Shape.new()
-	self.slingshot:setLineStyle(3, 0x0000FF,1)
-	self.slingshot:beginPath()
-	self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY())
-	self.slingshot:lineTo(self.projectBall:getX(), self.projectBall:getY())
-	self.slingshot:endPath()
-	self:addChild(self.slingshot)
 	
+	--To calculate the path till the end of table in the user selected direction we use the RaycastPoints class
+	--this class calculates the second point of raycast, which by default should be at the end of table in user  selected direction
+	self.raycastlength = RaycastPoints.new()	
+	--show the intial projection cueball,when screen is loaded 
+	self:defaultLengthOfRaycast()		
 	
-	--Default projected path of the ball will be  in the direction of user touch and till the  start of the wall.
-	--To find that point on the wall 
-	--calculating the distance of cueball from the wall
-	self.pointobj = pointsOnAline.new()		
-	
-	--once you correctly aim at the ball, next thing you will like to decide how hard you hit the cueball
+	--------once you correctly aim at the ball, next thing you will like to decide how hard you want to hit the cueball------
+	--let create and add the forcestrip to the class
 	self:createForceStrip()
-	
+	--The following events shows the projection of cueball and also shows the force with which user wants to hit the cueball
 	self:addEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
 	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
 	self:addEventListener(Event.MOUSE_UP, self.onMouseUp, self)
@@ -41,19 +38,31 @@ cueBallProjection = Core.class(Sprite)
 
  end
  
+ function cueBallProjection :defaultLengthOfRaycast()
+	--Raycast detects the objects in the user selected path .
+	--path will always be drawn till the end of the table if there is no other ball in the path.
+	--OR else will be drawn till the ball in the path of user has selected 
+	self.raycastlength :lengthofRaycast(self.cueBallObj:getX(),self.cueBallObj:getY(),self.projectBall:getX(),self.projectBall:getY())
+						world:rayCast(self.cueBallObj:getX() ,self.cueBallObj:getY(),self.raycastlength.Xraycastpoint2 ,
+						self.raycastlength.Yraycastpoint2, self.raycastCallback ,self )
+						
+ end
+ 
+
+ --If the raycast has detect an object in the project of cueball , then call the following function
  function cueBallProjection:raycastCallback (fixture ,hitx , hity , vecx ,vecty,fraction  )
 		
 		
-		local setx , sety
 		self.targetx = hitx
 		self.targety = hity
 		self.projectBall:setPosition(hitx ,hity)
 		self.slingshot:clear()
 		self.slingshot:setLineStyle(3, 0x0000FF,1)
 		self.slingshot:beginPath()
-		self.slingshot:moveTo(self.cueBall:getX(),self.cueBall:getY())
+		self.slingshot:moveTo(self.cueBallObj:getX(),self.cueBallObj:getY())
 		self.slingshot:lineTo(self.projectBall:getX() ,self.projectBall:getY())
 		self.slingshot:endPath()
+		self:addChild(self.slingshot)
 		
 	
 	return fraction
@@ -61,8 +70,8 @@ cueBallProjection = Core.class(Sprite)
 
 	
 	
-end
-function cueBallProjection : onMouseDown(event)
+ end
+ function cueBallProjection : onMouseDown(event)
 	local count = 0
 	self.hitstrip = false
 		
@@ -70,6 +79,7 @@ function cueBallProjection : onMouseDown(event)
 			do
 				
 				if (self.userSelectedForce[i]:hitTestPoint(event.x,event.y) )then
+					
 					print("you have the stipr number : " , i)
 					self.hitstrip = true
 					if(self.hitstrip == true )then
@@ -77,66 +87,68 @@ function cueBallProjection : onMouseDown(event)
 						
 					end
 				end
-				count = count+1
-				if(self.tableimage:hitTestPoint(event.x ,event.y) and self.hitstrip == false)then
-			
-					self.pointobj: twopointSlope(self.cueBall:getX(),self.cueBall:getY(),event.x,event.y)
-					world:rayCast(self.cueBall:getX() ,self.cueBall:getY(),self.pointobj.Xraycastpoint2 ,
-					self.pointobj.Yraycastpoint2, self.raycastCallback ,self )
-			
-				end
 				
+				
+			end
+			if(self.billiardTableObj:hitTestPoint(event.x ,event.y) and self.hitstrip == false)then
+					self.isFocus = true
+					self.raycastlength: lengthofRaycast(self.cueBallObj:getX(),self.cueBallObj:getY(),event.x,event.y)
+					world:rayCast(self.cueBallObj:getX() ,self.cueBallObj:getY(),self.raycastlength.Xraycastpoint2 ,
+					self.raycastlength.Yraycastpoint2, self.raycastCallback ,self )
+					--world:rayCast(self.cueBallObj:getX() ,self.cueBallObj:getY(),event.x ,event.y, self.raycastCallback ,self)
+			
 			end
 			
 		
 		
-end
+ end
 
-function cueBallProjection : onMouseMove(event)
-	local count = 0
-	print("calling mouce moveeeeeeeeee" , self.hitstrip2)
-	self.hitstrip2 = false
-		for i=1 , 15
-			do
+ function cueBallProjection : onMouseMove(event)
+		print("Calling mouse Moveee")
+		local count = 0
+		--print("calling mouce moveeeeeeeeee" , self.hitstrip2)
+		self.hitstrip2 = false
+		for i=1 , 15 do
 				
 				if ( self.userSelectedForce[i]:hitTestPoint(event.x,event.y))then
 					
 				
 					self.hitstrip2 = true
 					if(self.hitstrip2 == true )then
-					print("Call MOUse move strength")
 						self:showStrengthOnmouseMove( i )
 					end
 					
 				end
 				count = count+1
-				if(self.tableimage:hitTestPoint(event.x ,event.y) and self.hitstrip2 == false)then
-					print("chueeeeeeeeeeeeee")
-					self.pointobj: twopointSlope(self.cueBall:getX(),self.cueBall:getY(),event.x,event.y)
-					world:rayCast(self.cueBall:getX() ,self.cueBall:getY(),self.pointobj.Xraycastpoint2 ,
-					self.pointobj.Yraycastpoint2, self.raycastCallback ,self )
+		end
+
+		if(self.billiardTableObj:hitTestPoint(event.x ,event.y) )then
 				
-				end
-				
-			end
-			
+					if self.isFocus == true then
+					
+						self.raycastlength: lengthofRaycast(self.cueBallObj:getX(),self.cueBallObj:getY(),event.x,event.y)
+						world:rayCast(self.cueBallObj:getX() ,self.cueBallObj:getY(),self.raycastlength.Xraycastpoint2 ,
+						self.raycastlength.Yraycastpoint2, self.raycastCallback ,self )
+						world:rayCast(self.cueBallObj:getX() ,self.cueBallObj:getY(),event.x ,event.y, self.raycastCallback ,self)
+					
+					end
+		end
 		
 		
 		
 
-end
-function cueBallProjection : onMouseUp(event)
+ end
+ function cueBallProjection : onMouseUp(event)
 	print("calling mouse UPPPPPPP")
 	self.hitstrip3 = false
 
-	local tmpx = (self.projectBall:getX() - self.cueBall:getX()) *30
+	local tmpx = (self.projectBall:getX() - self.cueBallObj:getX()) *30
 	
-	local tmpy = (self.projectBall:getY() - self.cueBall:getY()) *30
+	local tmpy = (self.projectBall:getY() - self.cueBallObj:getY()) *30
 	
 	
 	
-	for i=1 , 15
-			do
+	for i=1 , 15 do
 				
 				
 				if (self.userSelectedForce[i]:hitTestPoint(event.x,event.y) )then
@@ -149,11 +161,15 @@ function cueBallProjection : onMouseUp(event)
 				end
 	end
 	
+	if(self.billiardTableObj:hitTestPoint(event.x ,event.y) and self.hitstrip3 == false)then
+		self.isFocus = false
+	end
 	
 	
-end
+	
+ end
 
-function cueBallProjection : showStrengthOnmouseDown (stripNumber)
+ function cueBallProjection : showStrengthOnmouseDown (stripNumber)
 	print("Show strength on MOuse Down")
 	
 	for i= 1 , 15
@@ -168,9 +184,9 @@ function cueBallProjection : showStrengthOnmouseDown (stripNumber)
 		stage:addChild(self.userSelectedForce[i])
 
 	end
-end
+ end
 
-function cueBallProjection : showStrengthOnmouseMove (stripNumber)
+ function cueBallProjection : showStrengthOnmouseMove (stripNumber)
 	print("Show Strength on mouse Move")
 	for i= 1 , 15
 	do
@@ -189,8 +205,8 @@ function cueBallProjection : showStrengthOnmouseMove (stripNumber)
 		
 
 	end
-end
-function cueBallProjection : removeStrengthIndicator(event)
+ end
+ function cueBallProjection : removeStrengthIndicator(event)
 	print("Remove strengthtttttttttttt")
 	for i = 1 , 15
 	do
@@ -200,24 +216,24 @@ function cueBallProjection : removeStrengthIndicator(event)
 	
 		local strength = (event.y - 200)
 		print("strength  : " ,strength)
-	local tmpx = (self.projectBall:getX() - self.cueBall:getX()) *strength
+	local tmpx = (self.projectBall:getX() - self.cueBallObj:getX()) *strength
 	
-	local tmpy = (self.projectBall:getY() - self.cueBall:getY()) *strength
+	local tmpy = (self.projectBall:getY() - self.cueBallObj:getY()) *strength
 	
-	self.cueBall.body:applyForce(tmpx,tmpy,self.projectBall:getX(),self.projectBall:getY())
+	self.cueBallObj.body:applyForce(tmpx,tmpy,self.projectBall:getX(),self.projectBall:getY())
 	self.slingshot:clear()
 	self.projectBall:setVisible(false)
 	self:removeEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
 	self:removeEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
 	self:removeEventListener(Event.MOUSE_UP, self.onMouseUp, self)
 	
-end
-function cueBallProjection : createForceStrip()
+ end
+ function cueBallProjection : createForceStrip()
 	local x =1225  y = 200
 	self.selectForce ={}
 	self.userSelectedForce = {}
 	for i=1 ,15 do
-
+		--shows the force strip to select force
 		self.selectForce[i] = Shape.new()
 		self.selectForce[i]:setLineStyle(2 ,0xff0000 )
 		self.selectForce[i]:beginPath()
@@ -229,7 +245,7 @@ function cueBallProjection : createForceStrip()
 		self.selectForce[i]:endPath()
 		self.selectForce[i].isFilled = false
 		
-		
+		-- shows user selected force
 		self.userSelectedForce[i] = Shape.new()
 		self.userSelectedForce[i]:setFillStyle(self.selectForce[i].SOLID, 0xff0000, 1)
 		self.userSelectedForce[i]:beginPath()
@@ -242,14 +258,15 @@ function cueBallProjection : createForceStrip()
 		self.userSelectedForce[i]:setVisible(false)
 		
 		
-		y = y+15
+		y = y+20
 		self:addChild(self.selectForce[i])
 		self:addChild(self.userSelectedForce[i])
 	end
 
-end
+ end
 
 
 
 
+ 
  
