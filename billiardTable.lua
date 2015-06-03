@@ -7,7 +7,6 @@ billiardTable = Core.class(Sprite)
 function billiardTable:init()
 
 	self.table = Bitmap.new(Texture.new("img/billiard_table.png"))
-	self.table:setAnchorPoint(0,0)
 	self:addChild(self.table)            -- adds the table object to instance of billiardTable 
 	
 	
@@ -40,7 +39,7 @@ function billiardTable:init()
 	--just for reference, debug draw is very useful, to see the things happening in physics world
 	local debugDraw = b2.DebugDraw.new()
 	world:setDebugDraw(debugDraw)
-	self:addChild(debugDraw)
+	--self:addChild(debugDraw)
 	
 	
 end
