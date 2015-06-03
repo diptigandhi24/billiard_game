@@ -142,9 +142,7 @@ cueBallProjection = Core.class(Sprite)
 	print("calling mouse UPPPPPPP")
 	self.hitstrip3 = false
 
-	local tmpx = (self.projectBall:getX() - self.cueBallObj:getX()) *30
 	
-	local tmpy = (self.projectBall:getY() - self.cueBallObj:getY()) *30
 	
 	
 	
