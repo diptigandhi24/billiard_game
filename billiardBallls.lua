@@ -20,14 +20,14 @@ function billiardBalls : init(BitmapOfTable)
 	self.coloredBalls = Bitmap.new(Texture.new("img/colouredBall.png"))
 	self.coloredBalls:setAnchorPoint(0.5,0.5)
 	self.coloredBalls:setPosition(800,400)
-	self:physicsPropertyOfBall(self.coloredBalls ,world)
+	self:physicsPropertyOfBall(self.coloredBalls)
 	self:addChild(self.coloredBalls)
 	self.coloredBalls.name = "coloredBalls"
 	
 	self.coloredBalls2 = Bitmap.new(Texture.new("img/colouredBall.png"))
 	self.coloredBalls2:setAnchorPoint(0.5,0.5)
 	self.coloredBalls2:setPosition(1000,500)
-	self:physicsPropertyOfBall(self.coloredBalls2 ,world)
+	self:physicsPropertyOfBall(self.coloredBalls2)
 	self:addChild(self.coloredBalls2)
 	self.coloredBalls2.name = "coloredBalls"
 	
@@ -42,7 +42,7 @@ function billiardBalls : init(BitmapOfTable)
 	
 	--update the position  of balls (i.e dynamic bodies)  every frame
 	--Also you can add and remove the ball and its body only  onEnterFrame function , as world update itself in it.
-	self:addEventListener( Event.ENTER_FRAME, self.onEnterFrame , self )
+	--self:addEventListener( Event.ENTER_FRAME, self.onEnterFrame , self )
 	
 	print("The number of child billiard balls has in the beginning " , self:getNumChildren())
 		
@@ -108,7 +108,7 @@ function billiardBalls:endContact(e)
 	local bodyB = fixtureB :getBody()
 	
 	if( bodyA.name == "reload" and bodyB.name =="ball" )then
-	
+		print("Black Ball and Colored ball")
 		self.reloadobj.cueballNotPlaceableIndicator:setVisible(false)
 		
 	end
@@ -131,7 +131,7 @@ function billiardBalls:addCueball(x,y)
 
 end
 
-function billiardBalls:onEnterFrame()
+--[[function billiardBalls:onEnterFrame()
 	
 	world:step(1/60, 8,3)
 	local zeroVelocityObjects =0 
@@ -205,5 +205,5 @@ function billiardBalls:onEnterFrame()
 	end
 	
 	
-end
+end]]--
 

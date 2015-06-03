@@ -1,14 +1,96 @@
 <project>
- <properties autorotation="0" encryptAssets="0" fps="60" scaleMode="5" mouseToTouch="1" iosDevice="0" packageName="com.goodHabits.billiard" logicalHeight="1280" logicalWidth="800" mouseTouchOrder="0" encryptCode="0" retinaDisplay="0" touchToMouse="1" assetsOnly="0" orientation="1" architecture="1">
+ <properties autorotation="0" encryptAssets="0" fps="60" scaleMode="5" mouseToTouch="1" iosDevice="0" packageName="com.billiard" logicalHeight="1280" logicalWidth="800" mouseTouchOrder="0" encryptCode="0" retinaDisplay="0" touchToMouse="1" assetsOnly="0" orientation="1" architecture="1">
   <imageScales>
    <scale suffix="@2x" scale="2"/>
    <scale suffix="@1.5x" scale="1.5"/>
   </imageScales>
  </properties>
+ <file source="onGameComplete.lua"/>
+ <file source="tahoma.ttf"/>
+ <file source="start.lua"/>
+ <file source="packs.json"/>
+ <file source="pack_select.lua"/>
+ <file source="options.lua"/>
+ <file source="level.lua"/>
+ <file source="level_select.lua"/>
+ <file source="help.lua"/>
+ <file source="config.lua"/>
+ <folder name="images">
+  <file source="images/scene1.jpg"/>
+  <file source="images/start_up.png"/>
+  <file source="images/start_down.png"/>
+  <file source="images/soundson_up.png"/>
+  <file source="images/soundson_down.png"/>
+  <file source="images/soundsoff_up.png"/>
+  <file source="images/soundsoff_down.png"/>
+  <file source="images/right-up.png"/>
+  <file source="images/right-down.png"/>
+  <file source="images/resume_up.png"/>
+  <file source="images/resume_down.png"/>
+  <file source="images/reset_up.png"/>
+  <file source="images/reset_down.png"/>
+  <file source="images/pause_up.png"/>
+  <file source="images/pause_down.png"/>
+  <file source="images/packselect_up.png"/>
+  <file source="images/packselect_down.png"/>
+  <file source="images/options_up.png"/>
+  <file source="images/options_down.png"/>
+  <file source="images/next_up.png"/>
+  <file source="images/next_down.png"/>
+  <file source="images/musicon_up.png"/>
+  <file source="images/musicon_down.png"/>
+  <file source="images/musicoff_up.png"/>
+  <file source="images/musicoff_down.png"/>
+  <file source="images/menu_up.png"/>
+  <file source="images/menu_down.png"/>
+  <file source="images/levelselect_up.png"/>
+  <file source="images/levelselect_down.png"/>
+  <file source="images/left-up.png"/>
+  <file source="images/left-down.png"/>
+  <file source="images/help_up.png"/>
+  <file source="images/help_down.png"/>
+  <file source="images/gideros_mobile.png"/>
+  <file source="images/crate.png"/>
+  <file source="images/crate_locked.png"/>
+  <file source="images/button_up.png"/>
+  <file source="images/button_down.png"/>
+  <file source="images/back_up.png"/>
+  <file source="images/back_down.png"/>
+ </folder>
+ <folder name="classes">
+  <file source="classes/View.lua"/>
+  <file source="classes/TextWrap.lua"/>
+  <file source="classes/Sounds.lua"/>
+  <file source="classes/Settings.lua"/>
+  <file source="classes/scenemanager.lua"/>
+  <file source="classes/Popup.lua"/>
+  <file source="classes/Music.lua"/>
+  <file source="classes/lib.lua"/>
+  <file source="classes/json.lua"/>
+  <file source="classes/gtween.lua"/>
+  <file source="classes/GameManager.lua"/>
+  <file source="classes/easing.lua"/>
+  <file source="classes/dataSaver.lua"/>
+  <file source="classes/button.lua"/>
+  <file source="classes/AceSlide.lua"/>
+ </folder>
+ <folder name="audio">
+  <file source="audio/main.mp3"/>
+  <file source="audio/hit.wav"/>
+  <file source="audio/complete.mp3"/>
+ </folder>
+ <file source="ReloadThecueBall.lua"/>
  <file source="RaycastPoints.lua"/>
  <file source="billiardBallls.lua"/>
  <file source="cueBallProjection.lua"/>
  <folder name="img">
+  <file source="img/6ColoredBall.png"/>
+  <file source="img/5ColoredBall.png"/>
+  <file source="img/4ColoredBall.png"/>
+  <file source="img/3ColoredBall.png"/>
+  <file source="img/2ColoredBall.png"/>
+  <file source="img/reloadCueball.png"/>
+  <file source="img/noentry.png"/>
   <file source="img/colouredBall.png"/>
   <file source="img/velocityStrip.png"/>
   <file source="img/billiard_table.png"/>
