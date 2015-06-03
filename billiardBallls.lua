@@ -141,6 +141,16 @@ function billiardBalls:onEnterFrame()
 	--for better explaination refer http://howto.oz-apps.com/2011/09/tower-of-babel-no-honoi-maybe.html
 	print("NUmber Of Children Billiard has " ,self:getNumChildren())
 	for i = self:getNumChildren() , 1,-1  do
+	if self:getNumChildren()==2 and self.ongameComplete == true then
+		sceneManager:changeScene("onGameComplete", 1, conf.transition, conf.easing)
+		self.ongameComplete = false
+	end
+	
+	if self:getNumChildren() == 2 and self.ongameComplete == true
+	then
+		sceneManager:changeScene("onGameComplete", 1, conf.transition, conf.easing)
+		
+	end
 	
 		--get specific sprite
 		local sprite = self:getChildAt(i)
@@ -161,7 +171,7 @@ function billiardBalls:onEnterFrame()
 					if(zeroVelocityObjects == self:getNumChildren()-1 and self.cueBall ~= nil)then
 					
 						print("ZeroVelocity objects are " ,zeroVelocityObjects)
-						print("NUmber of object with body " ,self:getNumChildren() )
+						print("NUmber of billiardball object  " ,self:getNumChildren() )
 						self.projectionObj.projectBall:setVisible(true)
 						self.projectionObj:defaultLengthOfRaycast()
 						self.projectionObj:addEventListener(Event.MOUSE_DOWN , self.projectionObj.onMouseDown , self.projectionObj)
@@ -204,7 +214,5 @@ function billiardBalls:onEnterFrame()
 			
 		end
 	end
-	
-	
-end]]--
+end
 
