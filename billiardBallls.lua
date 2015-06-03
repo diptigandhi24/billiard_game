@@ -42,7 +42,8 @@ function billiardBalls : init(BitmapOfTable)
 	
 	--update the position  of balls (i.e dynamic bodies)  every frame
 	--Also you can add and remove the ball and its body only  onEnterFrame function , as world update itself in it.
-	--self:addEventListener( Event.ENTER_FRAME, self.onEnterFrame , self )
+	self:addEventListener( Event.ENTER_FRAME, self.onEnterFrame , self )
+	self.ongameComplete = true
 	
 	print("The number of child billiard balls has in the beginning " , self:getNumChildren())
 		
@@ -131,8 +132,8 @@ function billiardBalls:addCueball(x,y)
 
 end
 
---[[function billiardBalls:onEnterFrame()
-	
+function billiardBalls:onEnterFrame() 
+	local gameComplete = true
 	world:step(1/60, 8,3)
 	local zeroVelocityObjects =0 
 	

@@ -25,12 +25,12 @@ self:addChild(createTable)
 self.createBall = billiardBalls.new(createTable.table)
 self:addChild(self.createBall)
 
-self.createBall:addEventListener( Event.ENTER_FRAME, self.onEnterFrame , self )
+--self.createBall:addEventListener( Event.ENTER_FRAME, self.onEnterFrame , self )
 self.ongameComplete = true
 end
 
 --removing event
-function level:onEnterFrame() 
+--[[function level:onEnterFrame() 
 	local self1 = self.createBall
 	local gameComplete = true
 	world:step(1/60, 8,3)
@@ -113,7 +113,7 @@ function level:onEnterFrame()
 			
 		end
 	end
-end
+end]]--
 
 --removing event on exiting scene
 function level:onExitBegin()
