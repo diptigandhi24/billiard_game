@@ -5,6 +5,7 @@
    <scale suffix="@1.5x" scale="1.5"/>
   </imageScales>
  </properties>
+ <file source="PositionOfStick.lua"/>
  <file source="onGameComplete.lua"/>
  <file source="tahoma.ttf"/>
  <file source="start.lua"/>
@@ -84,6 +85,7 @@
  <file source="billiardBallls.lua"/>
  <file source="cueBallProjection.lua"/>
  <folder name="img">
+  <file source="img/stick.png"/>
   <file source="img/6ColoredBall.png"/>
   <file source="img/5ColoredBall.png"/>
   <file source="img/4ColoredBall.png"/>
