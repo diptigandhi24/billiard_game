@@ -54,8 +54,8 @@ function billiardBalls : physicsPropertyOfBall( ball )
 	local body = world:createBody{ type = b2.DYNAMIC_BODY }
 	body.name = "ball"
 	body:setPosition( ball:getX(),ball:getY())
-	body:setLinearDamping(0.5)
-	body:setAngularDamping(1)
+	body:setLinearDamping(2)
+	body:setAngularDamping(2)
 	
 	--Inner Fixture are the actual shapes of the images in the game and detect and react to collision
 	local innerCircle = b2.CircleShape.new(0,0,20)
