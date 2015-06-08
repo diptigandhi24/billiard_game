@@ -1,6 +1,6 @@
  RaycastPoints = Core.class()
  
---we need two points for the raycast , one point the curball position and one point at the edge/wall of  the table 
+--we need two points for the raycast , one point the cueball position and one point at the edge/wall of  the table 
 -- this class will help us to find the point on the line of cueball x & y and usertouch x & y ,  at the boundary of table  
 function  RaycastPoints :init()
 end

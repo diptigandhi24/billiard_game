@@ -15,7 +15,7 @@ cueBallProjection = Core.class(Sprite)
 	self:addChild(self.projectBall)
 	
 	
-	--------when the screen is loaded ,lets show the default project path of the cueBall------
+	--------when the screen is loaded ,lets create the default project path of the cueBall, following are the steps------
 	
 	--initialise the shape object , which will be use to create path
 	self.slingshot = Shape.new()
@@ -23,13 +23,14 @@ cueBallProjection = Core.class(Sprite)
 	--To calculate the path till the end of table in the user selected direction we use the RaycastPoints class
 	--this class calculates the second point of raycast, which by default should be at the end of table in user  selected direction
 	self.raycastlength = RaycastPoints.new()	
-	--show the intial projection cueball,when screen is loaded 
+	--show the initial projection of  cueball,when screen is loaded 
 	self:defaultLengthOfRaycast()		
 	
 	--------once you correctly aim at the ball, next thing you will like to decide how hard you want to hit the cueball------
 	--let create and add the forcestrip to the class
 	self:createForceStrip()
-	--The following events shows the projection of cueball and also shows the force with which user wants to hit the cueball
+	
+	--Following events are for billiardtable and forcestrip , used for projection and hitting the cueball
 	self:addEventListener(Event.MOUSE_DOWN , self.onMouseDown , self)
 	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
 	self:addEventListener(Event.MOUSE_UP, self.onMouseUp, self)
@@ -39,9 +40,9 @@ cueBallProjection = Core.class(Sprite)
  end
  
  function cueBallProjection :defaultLengthOfRaycast()
-	--Raycast detects the objects in the user selected path .
-	--path will always be drawn till the end of the table if there is no other ball in the path.
-	--OR else will be drawn till the ball in the path of user has selected 
+	--Raycast detects the objects in the projected  path of the cueball  .
+	--path will always be drawn till the end of the table if there is no other ball in the way.
+	--OR else path will be drawn till the ball .
 	self.raycastlength :lengthofRaycast(self.cueBallObj:getX(),self.cueBallObj:getY(),self.projectBall:getX(),self.projectBall:getY())
 						world:rayCast(self.cueBallObj:getX() ,self.cueBallObj:getY(),self.raycastlength.Xraycastpoint2 ,
 						self.raycastlength.Yraycastpoint2, self.raycastCallback ,self )
@@ -49,7 +50,7 @@ cueBallProjection = Core.class(Sprite)
  end
  
 
- --If the raycast has detect an object in the project of cueball , then call the following function
+ --If the raycast detects an object in the path of cueball projection , then show the projection till the object detected .
  function cueBallProjection:raycastCallback (fixture ,hitx , hity , vecx ,vecty,fraction  )
 		
 		
@@ -175,6 +176,7 @@ cueBallProjection = Core.class(Sprite)
 		print("INSIDE FOR LOOP")
 		if(self.userSelectedForce[i]:isVisible() == false and i<=stripNumber)
 		then
+			--hightlight the rectangle from the beginning till the selected one 
 			self.userSelectedForce[i]:setVisible(true)
 			
 		end
@@ -189,6 +191,7 @@ cueBallProjection = Core.class(Sprite)
 	for i= 1 , 15
 	do
 		
+		--if the user is hovering from upto down , highlight the strip from top
 		if self.userSelectedForce[i]:isVisible()== false and i<=stripNumber then
 		
 			self.userSelectedForce[i]:setVisible(true)
@@ -196,6 +199,7 @@ cueBallProjection = Core.class(Sprite)
 			--self.userSelectedForce[i]:setVisible(false)
 		
 		end
+		--if the user is hovering from bottom to up removing the highlight from bottom
 		if self.userSelectedForce[i]:isVisible() == true and i>stripNumber then
 			self.userSelectedForce[i]:setVisible(false)
 		end

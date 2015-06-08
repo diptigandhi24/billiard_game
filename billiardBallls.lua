@@ -31,7 +31,7 @@ function billiardBalls : init(BitmapOfTable)
 	self:addChild(self.coloredBalls2)
 	self.coloredBalls2.name = "coloredBalls"
 	
-	--creates the projection of cueball and add it to the billiard class.
+	--creates the projection of cueball .
 	self.billiardTableObj = BitmapOfTable
 	self.projectionObj = cueBallProjection.new( self.cueBall ,self.billiardTableObj )
 	self:addChild( self.projectionObj )
@@ -146,6 +146,7 @@ function billiardBalls:onEnterFrame()
 		self.ongameComplete = false
 	end
 	
+	-- if all the balls are pocketed, except cueball and project ball then change the scene.
 	if self:getNumChildren() == 2 and self.ongameComplete == true
 	then
 		sceneManager:changeScene("onGameComplete", 1, conf.transition, conf.easing)
@@ -163,11 +164,13 @@ function billiardBalls:onEnterFrame()
 			local body = sprite.body
 			--get body coordinates
 			local bodyX, bodyY = body:getPosition()
-				-- If all the balls are at rest then let the user play , otherwise wait till the balls comes at rest
+				-- If all the balls are at rest then let the user play , orelse wait till the balls comes at rest
 				if body:getLinearVelocity() == 0 and body.name == "ball" then
 				
 					zeroVelocityObjects = zeroVelocityObjects + 1
 					
+					--once player is done hitting the cueball and all the ball comes to rest then
+					--update the projecting path and billiard stick with respect to the current location of cueball 
 					if(zeroVelocityObjects == self:getNumChildren()-1 and self.cueBall ~= nil)then
 					
 						print("ZeroVelocity objects are " ,zeroVelocityObjects)
