@@ -11,7 +11,7 @@ PreView_Mask = 16
 function billiardBalls : init(BitmapOfTable)
 	
 	local X_INTIAL_CUEBALLPOSITION = 400
-	local Y_INTIAL_CUEBALLPOSITION = 400
+	local Y_INTIAL_CUEBALLPOSITION = 343
 	
 	self:addCueball(X_INTIAL_CUEBALLPOSITION ,Y_INTIAL_CUEBALLPOSITION)
 
@@ -19,14 +19,14 @@ function billiardBalls : init(BitmapOfTable)
 	--Balls are self because they are added to the stage in the main class
 	self.coloredBalls = Bitmap.new(Texture.new("img/colouredBall.png"))
 	self.coloredBalls:setAnchorPoint(0.5,0.5)
-	self.coloredBalls:setPosition(800,400)
+	self.coloredBalls:setPosition(800,200)
 	self:physicsPropertyOfBall(self.coloredBalls)
 	self:addChild(self.coloredBalls)
 	self.coloredBalls.name = "coloredBalls"
 	
-	self.coloredBalls2 = Bitmap.new(Texture.new("img/colouredBall.png"))
+	self.coloredBalls2 = Bitmap.new(Texture.new("img/blackBall.png"))
 	self.coloredBalls2:setAnchorPoint(0.5,0.5)
-	self.coloredBalls2:setPosition(1000,500)
+	self.coloredBalls2:setPosition(800,500)
 	self:physicsPropertyOfBall(self.coloredBalls2)
 	self:addChild(self.coloredBalls2)
 	self.coloredBalls2.name = "coloredBalls"
