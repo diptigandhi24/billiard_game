@@ -35,13 +35,10 @@ function RaycastPoints : lengthofRaycast(Xcueball ,Ycueball ,Xtouch ,Ytouch)
 -- y-y1 = m (x-x1)  , where y1 and x1 are the know points and x and y are unknow exactraycast point
 --lets first find y
 	local tmpY = (slope *(self.XrefpointofRaycast - self.Xcueball)) + self.Ycueball
-	--print("tmpY : " ,tmpY)
 	if(tmpY >= 0 and tmpY <=686)then
 		self.Yraycastpoint2 = tmpY
-		--print(" Y Value is temporary" , self.Yraycastpoint2)
 	else 
 		self.Yraycastpoint2 = self.YrefpointofRaycast
-		--print(" Ys reference value" , self.Yraycastpoint2)
 	end
 	
 --similarly 
@@ -50,10 +47,8 @@ function RaycastPoints : lengthofRaycast(Xcueball ,Ycueball ,Xtouch ,Ytouch)
 	then
 		
 		self.Xraycastpoint2 = tmpX
-		--print(" X Value is temporary" ,self.Xraycastpoint2)
 	else
 		self.Xraycastpoint2= self.XrefpointofRaycast
-		--print(" X reference value" ,self.Xraycastpoint2)
 	end
 	
 end

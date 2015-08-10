@@ -81,7 +81,6 @@ cueBallProjection = Core.class(Sprite)
 				
 				if (self.userSelectedForce[i]:hitTestPoint(event.x,event.y) )then
 					
-					print("you have the stipr number : " , i)
 					self.hitstrip = true
 					if(self.hitstrip == true )then
 						self:showStrengthOnmouseDown( i )
@@ -105,9 +104,7 @@ cueBallProjection = Core.class(Sprite)
  end
 
  function cueBallProjection : onMouseMove(event)
-		print("Calling mouse Moveee")
 		local count = 0
-		--print("calling mouce moveeeeeeeeee" , self.hitstrip2)
 		self.hitstrip2 = false
 		for i=1 , 15 do
 				
@@ -140,7 +137,6 @@ cueBallProjection = Core.class(Sprite)
 
  end
  function cueBallProjection : onMouseUp(event)
-	print("calling mouse UPPPPPPP")
 	self.hitstrip3 = false
 
 	
@@ -151,7 +147,6 @@ cueBallProjection = Core.class(Sprite)
 				
 				
 				if (self.userSelectedForce[i]:hitTestPoint(event.x,event.y) )then
-					print("you have the stipr number : " , i)
 					self.hitstrip3 = true
 					if(self.hitstrip3 == true )then
 						self:removeStrengthIndicator( event )
@@ -169,11 +164,9 @@ cueBallProjection = Core.class(Sprite)
  end
 
  function cueBallProjection : showStrengthOnmouseDown (stripNumber)
-	print("Show strength on MOuse Down")
 	
 	for i= 1 , 15
 	do
-		print("INSIDE FOR LOOP")
 		if(self.userSelectedForce[i]:isVisible() == false and i<=stripNumber)
 		then
 			--hightlight the rectangle from the beginning till the selected one 
@@ -187,7 +180,6 @@ cueBallProjection = Core.class(Sprite)
  end
 
  function cueBallProjection : showStrengthOnmouseMove (stripNumber)
-	print("Show Strength on mouse Move")
 	for i= 1 , 15
 	do
 		
@@ -209,7 +201,6 @@ cueBallProjection = Core.class(Sprite)
 	end
  end
  function cueBallProjection : removeStrengthIndicator(event)
-	print("Remove strengthtttttttttttt")
 	for i = 1 , 15
 	do
 		self.userSelectedForce[i]:setVisible(false)
@@ -217,7 +208,6 @@ cueBallProjection = Core.class(Sprite)
 	end
 	
 		local strength = (event.y - 200)
-		print("strength  : " ,strength)
 	local tmpx = (self.projectBall:getX() - self.cueBallObj:getX()) *strength
 	
 	local tmpy = (self.projectBall:getY() - self.cueBallObj:getY()) *strength

@@ -111,12 +111,10 @@ function PositionOfStick:calcPositionOfStick(projectBallObj , tempRadius)
 	--calculate the diagonal point in the first quadrant
 		Px = X_cueball+ xside
 		Py = Y_cueball - yside
-		--print("calculated X and Y position of stick : " , Px , Py)
 		self.billiardStick:setPosition(Px,Py)
 		self.billiardStick.body:setPosition(Px,Py)
 		local angle_of_stick = self.billiardStick:setRotation(inclination_of_stick)
 		self.billiardStick.body:setAngle(angle)
-		--print("Angle of stick : " , inclination_of_stick )
 
 		
 	end
@@ -126,11 +124,8 @@ function PositionOfStick:calcPositionOfStick(projectBallObj , tempRadius)
 	--	calculate the slope and angle made by the line
 		X_difference = X_projectball - X_cueball
 		Y_difference = Y_projectball - Y_cueball
-		--print("X_difference , Y_difference : " , X_difference , Y_difference)
 		angle = math.atan( Y_difference / X_difference )
-		--print("Angle in radian = ", angle)
 		local angle_degree = math.deg(angle)
-		--print("slope or tan angle " , angle_degree)
 
 	--Boundaries of angle for the stick in the fourth quadrant 
 		local default_angle = 180
@@ -140,20 +135,16 @@ function PositionOfStick:calcPositionOfStick(projectBallObj , tempRadius)
 	--calculate the diagonal point in the fourth quadrant
 		Px = X_cueball- xside
 		Py = Y_cueball - yside
-		--print("calculated X and Y position of stick : " , Px , Py)
 		self.billiardStick:setPosition(Px,Py)
 		local angle_of_stick = self.billiardStick:setRotation(angle_degree)
 		
-		--print("Angle of stick : " , angle_of_stick )
 		
 		Px = X_cueball+ xside
 		Py = Y_cueball + yside
-		--print("calculated X and Y position of stick : " , Px , Py)
 		self.billiardStick:setPosition(Px,Py)
 		self.billiardStick.body:setPosition(Px,Py)
 		local angle_of_stick = self.billiardStick:setRotation(inclination_of_stick)
 		self.billiardStick.body:setAngle(angle)
-		--print("Angle of stick : " , angle_of_stick )
 	end
 
 	--if the user clicks in the first quadrant then the stick will be in the third quadrant
@@ -161,11 +152,8 @@ function PositionOfStick:calcPositionOfStick(projectBallObj , tempRadius)
 		--	calculate the slope and angle made by the line
 		X_difference = X_projectball - X_cueball
 		Y_difference = Y_cueball - Y_projectball
-		--print("X_difference , Y_difference : " , X_difference , Y_difference)
 		angle = math.atan( Y_difference / X_difference )
-		--print("Angle in radian = ", angle)
 		local angle_degree = math.deg(angle)
-		--print("slope or tan angle" , math.deg(angle))
 
 	--Boundaries of angle for the stick in the third quadrant 
 		local default_angle = 360
@@ -180,7 +168,6 @@ function PositionOfStick:calcPositionOfStick(projectBallObj , tempRadius)
 		self.billiardStick.body:setPosition(Px,Py)
 		local angle_of_stick = self.billiardStick:setRotation(inclination_of_stick)
 		self.billiardStick.body:setAngle(angle)
-		--print("Angle of stick : " , inclination_of_stick )
 		
 	end
 

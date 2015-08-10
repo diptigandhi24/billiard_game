@@ -109,7 +109,6 @@ function billiardBalls:endContact(e)
 	local bodyB = fixtureB :getBody()
 	
 	if( bodyA.name == "reload" and bodyB.name =="ball" )then
-		print("Black Ball and Colored ball")
 		self.reloadobj.cueballNotPlaceableIndicator:setVisible(false)
 		
 	end
@@ -139,7 +138,6 @@ function billiardBalls:onEnterFrame()
 	
 	--Reverse for loop in which last in first out (lifo) is applied 
 	--for better explaination refer http://howto.oz-apps.com/2011/09/tower-of-babel-no-honoi-maybe.html
-	print("NUmber Of Children Billiard has " ,self:getNumChildren())
 	for i = self:getNumChildren() , 1,-1  do
 	if self:getNumChildren()==2 and self.ongameComplete == true then
 		sceneManager:changeScene("onGameComplete", 1, conf.transition, conf.easing)
@@ -173,8 +171,6 @@ function billiardBalls:onEnterFrame()
 					--update the projecting path and billiard stick with respect to the current location of cueball 
 					if(zeroVelocityObjects == self:getNumChildren()-1 and self.cueBall ~= nil)then
 					
-						print("ZeroVelocity objects are " ,zeroVelocityObjects)
-						print("NUmber of billiardball object  " ,self:getNumChildren() )
 						self.projectionObj.projectBall:setVisible(true)
 						self.projectionObj:defaultLengthOfRaycast()
 						self.projectionObj:addEventListener(Event.MOUSE_DOWN , self.projectionObj.onMouseDown , self.projectionObj)
@@ -197,7 +193,6 @@ function billiardBalls:onEnterFrame()
 				if sprite.name == "cueBall"  then	--if the deleted ball is cueball
 					self.cueBall = nil
 					self.reloadobj = ReloadThecueBall.new(self)
-					print("when reload created Preview of cueball" , self.cueballPositionPreview)
 					self:addChild(self.reloadobj)
 					
 				end
@@ -208,7 +203,6 @@ function billiardBalls:onEnterFrame()
 					self.projectionObj.cueBallObj = nil
 					self.projectionObj.cueBallObj =self.cueBall
 					self:removeChild(self.reloadobj)
-					print("when reload remove Preview of cueball" , self.cueballPositionPreview)
 					self.reloadobj = nil
 					
 				end
